@@ -1,0 +1,14 @@
+{
+  "name": "@template/shared-types",
+  "version": "1.0.0",
+  "description": "Shared types for the monorepo.",
+  "main": "dist/index.js",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "echo 'No build needed for types'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.23.0"
+}

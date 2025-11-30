@@ -1,0 +1,18 @@
+{
+  "name": "bare-metal-template",
+  "version": "1.0.0",
+  "description": "Minimal Hono + Preact Monorepo Template",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ui": "pnpm --filter web dev",
+    "api": "pnpm --filter server start",
+    "build": "pnpm -r build",
+    "install:all": "pnpm install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.23.0"
+}
