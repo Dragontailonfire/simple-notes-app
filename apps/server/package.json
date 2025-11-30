@@ -12,11 +12,14 @@
   "license": "ISC",
   "packageManager": "pnpm@10.23.0",
   "dependencies": {
-    "@template/shared-types": "workspace:*",
     "@hono/node-server": "^1.19.6",
+    "@hono/zod-validator": "^0.7.5",
+    "@supabase/supabase-js": "^2.86.0",
+    "@template/shared-types": "workspace:*",
     "dotenv": "^17.2.3",
     "hono": "^4.10.7",
-    "postgres": "^3.4.7"
+    "postgres": "^3.4.7",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",

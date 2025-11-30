@@ -1,41 +1,74 @@
 import { Hono } from "hono";
 import "dotenv/config";
 import { serve } from "@hono/node-server";
-import type { Note } from "@template/shared-types";
-
-// *** DATABASE SETUP (Example using postgres library) ***
-const db = {
-  query: (sql: string, params: any[] = []) => {
-    console.log("Executing SQL:", sql, "with params:", params);
-    // In a real app, this connects to the DB_HOST using process.env.DB_USER, etc.
-    // Implement actual database querying logic here
-    return Promise.resolve({
-      rows: [
-        {
-          id: "1",
-          user_id: "001",
-          content: "Sample note",
-        } as Note,
-        {
-          id: "2",
-          user_id: "001",
-          content: "Another Sample note",
-        } as Note,
-      ],
-    });
-  },
-};
+import { secureHeaders } from "hono/secure-headers";
+import { cors } from "hono/cors";
+import { createClient } from "@supabase/supabase-js";
+import z from "zod";
+import { zValidator } from "@hono/zod-validator";
 
 const app = new Hono().basePath("/api");
 
-app.get("/notes", async (c) => {
-  //1. AUTH CHECK: Middleware needed here for real auth
-  //2. DB QUERY: Call database client here
+app.use("*", secureHeaders());
+app.use("*", cors());
 
-  const result = await db.query("SELECT * FROM notes WHERE user_id = $1", [
-    "current_user_id",
-  ]);
-  return c.json(result.rows);
+const getSupabase = (c: any) => {
+  const authHeader = c.req.headers.get("Authorization");
+  return createClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!,
+    { global: { headers: { Authorization: authHeader } } }
+  );
+};
+
+const noteSchema = z.object({
+  content: z
+    .string()
+    .min(1)
+    .max(500)
+    .transform((val) => val.trim()),
+});
+
+app.get("/notes", async (c) => {
+  const supabase = getSupabase(c);
+
+  const { data, error } = await supabase
+    .from("notes")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    return c.json({ error: error.message }, 500);
+  }
+
+  return c.json(data);
+});
+
+app.post("/notes", zValidator("json", noteSchema), async (c) => {
+  const content = c.req.valid("json");
+  const supabase = getSupabase(c);
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+  if (authError || !user) {
+    return c.json({ error: "Unauthorized" }, 401);
+  }
+
+  const { data, error } = await supabase
+    .from("notes")
+    .insert({
+      content,
+      user_id: user.id,
+    })
+    .select();
+
+  if (error) {
+    return c.json({ error: error.message }, 500);
+  }
+
+  return c.json(data);
 });
 
 const port = parseInt(process.env.PORT || "4000");
