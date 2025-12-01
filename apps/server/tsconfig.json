@@ -1,11 +1,10 @@
 {
-  "extends": "../../tsconfig.json", // Inherits the root settings
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "outDir": "dist",
-    "rootDir": "src",
-    "types": ["node"] // Explicitly include Node types
+    "types": ["node"]
   },
   "include": ["src/**/*.ts", "src/**/*.js"]
 }
