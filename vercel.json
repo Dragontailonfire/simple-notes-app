@@ -4,6 +4,12 @@
   "installCommand": "pnpm install",
   "buildCommand": "pnpm build",
   "outputDirectory": "apps/web/dist",
+  "functions": {
+    "api/index.js": {
+      "runtime": "@vercel/node",
+      "includeFiles": "apps/server/src/index.ts"
+    }
+  },
   "rewrites": [
     {
       "source": "/api/(.*)",
