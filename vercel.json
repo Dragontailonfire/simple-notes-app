@@ -6,7 +6,6 @@
   "outputDirectory": "apps/web/dist",
   "functions": {
     "api/index.js": {
-      "runtime": "@vercel/nodejs24.x",
       "includeFiles": "apps/server/src/index.ts"
     }
   },
