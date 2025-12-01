@@ -2,25 +2,12 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
   "installCommand": "pnpm install",
-  "builds": [
+  "buildCommand": "pnpm build",
+  "outputDirectory": "apps/web/dist",
+  "rewrites": [
     {
-      "src": "apps/server/src/index.ts",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "apps/web/index.html",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "apps/web/dist" }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "apps/server/src/index.ts"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "apps/web/dist/$1"
+      "source": "/api/(.*)",
+      "destination": "/apps/server/src/index.ts"
     }
   ]
 }
