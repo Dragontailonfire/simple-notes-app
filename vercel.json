@@ -15,12 +15,12 @@
   ],
   "routes": [
     {
-      "src": "/server/(.*)",
+      "src": "/api/(.*)",
       "dest": "apps/server/src/index.ts"
     },
     {
       "src": "/(.*)",
-      "dest": "apps/web/$1"
+      "dest": "apps/web/dist/$1"
     }
   ]
 }

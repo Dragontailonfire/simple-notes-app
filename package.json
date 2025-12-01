@@ -1,15 +1,16 @@
 {
-  "name": "bare-metal-template",
+  "name": "simple-notes-app",
   "version": "1.0.0",
-  "description": "Minimal Hono + Preact Monorepo Template",
+  "description": "Simple notes app created from the Hono + Preact Monorepo Template",
   "private": true,
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "ui": "pnpm --filter web dev",
-    "api": "pnpm --filter server start",
-    "build": "pnpm -r build",
-    "install:all": "pnpm install"
+    "web": "pnpm --filter web dev",
+    "server": "pnpm --filter server start",
+    "build:web": "pnpm --filter web build",
+    "build:server": "pnpm --filter server build",
+    "build": "pnpm build:web && pnpm build:server"
   },
   "keywords": [],
   "author": "",
