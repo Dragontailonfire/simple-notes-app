@@ -2,6 +2,7 @@ import { useEffect } from "preact/hooks";
 import "./app.css";
 import { useSignal } from "@preact/signals";
 import { supabase } from "../lib/supabase";
+import githubMark from "./assets/github-mark-white.svg";
 
 export function App() {
   const session = useSignal<any>(null);
@@ -112,10 +113,17 @@ export function App() {
   if (!session.value) {
     return (
       <div id="app" class="centered">
-        <h1>Please log in</h1>
-        <button onClick={login} class="login btn btn-primary">
-          Log In with GitHub
-        </button>
+        <h1>Please log in to view notes</h1>
+        <div class="github-signin-container">
+          <button class="github-signin-btn" onClick={login}>
+            <img
+              src={githubMark}
+              alt="GitHub Invertocat logo"
+              class="github-mark"
+            />
+            Sign in with GitHub
+          </button>
+        </div>
       </div>
     );
   }
