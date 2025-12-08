@@ -62,6 +62,39 @@ app.post("/notes", zValidator("json", noteSchema), async (c) => {
   return c.json(data);
 });
 
+app.patch("/notes/:id", zValidator("json", noteSchema), async (c) => {
+  const idParam = c.req.param("id");
+  const id = parseInt(idParam, 10);
+  if (Number.isNaN(id)) {
+    return c.json({ error: "Invalid id" }, 400);
+  }
+  const content = c.req.valid("json").content;
+  const supabase = getSupabase(c);
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+  if (authError || !user) {
+    return c.json({ error: "Unauthorized" }, 401);
+  }
+
+  const { data, error } = await supabase
+    .from("notes")
+    .update({
+      content,
+    })
+    .eq("id", id)
+    .eq("user_id", user.id)
+    .select();
+
+  if (error) {
+    return c.json({ error: error.message }, 500);
+  }
+
+  return c.json(data);
+});
+
 app.delete("/notes/:id", async (c) => {
   const idParam = c.req.param("id");
   const id = parseInt(idParam, 10);
