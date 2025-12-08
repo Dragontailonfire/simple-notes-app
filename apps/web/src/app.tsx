@@ -3,6 +3,11 @@ import { useSignal } from "@preact/signals";
 import { supabase } from "../lib/supabase";
 import githubMark from "./assets/github-mark-white.svg";
 
+const API_BASE = import.meta.env.VITE_SERVER_URL ?? "/api";
+function apiUrl(path: string) {
+  return `${API_BASE.replace(/\/$/, "")}/${String(path).replace(/^\//, "")}`;
+}
+
 export function App() {
   const session = useSignal<any>(null);
   const notes = useSignal<any[]>([]);
@@ -33,7 +38,7 @@ export function App() {
     try {
       if (!session.value) return;
 
-      const res = await fetch("/api/notes", {
+      const res = await fetch(apiUrl("/notes"), {
         headers: {
           Authorization: `Bearer ${session.value.access_token}`,
         },
@@ -52,7 +57,7 @@ export function App() {
     e.preventDefault();
     if (!session.value) return;
 
-    const res = await fetch("/api/notes", {
+    const res = await fetch(apiUrl("/notes"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -77,7 +82,7 @@ export function App() {
     if (!proceed) return;
 
     try {
-      const res = await fetch(`/api/notes/${id}`, {
+      const res = await fetch(apiUrl(`/notes/${id}`), {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${session.value.access_token}`,
@@ -99,7 +104,7 @@ export function App() {
     if (!session.value) return;
 
     try {
-      const res = await fetch(`/api/notes/${editedNoteId.value}`, {
+      const res = await fetch(apiUrl(`/notes/${editedNoteId.value}`), {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
