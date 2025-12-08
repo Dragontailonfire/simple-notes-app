@@ -3,7 +3,14 @@ import { useSignal } from "@preact/signals";
 import { supabase } from "../lib/supabase";
 import githubMark from "./assets/github-mark-white.svg";
 
-const API_BASE = import.meta.env.VITE_SERVER_URL ?? "/api";
+const raw = import.meta.env.VITE_SERVER_URL ?? "";
+
+const API_BASE = ((): string => {
+  if (!raw) return "/api"; // dev: use Vite proxy
+  const hasProto = raw.startsWith("http://") || raw.startsWith("https://");
+  return (hasProto ? raw : `https://${raw}`).replace(/\/$/, "");
+})();
+
 function apiUrl(path: string) {
   return `${API_BASE.replace(/\/$/, "")}/${String(path).replace(/^\//, "")}`;
 }
