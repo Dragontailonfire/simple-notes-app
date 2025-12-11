@@ -291,11 +291,11 @@ export function App() {
           {notes.value.map((note) => (
             <div class="col-sm-6 mb-3 mb-sm-0">
               <div key={note.id} class="card mb-3 rounded">
-                <button
+                {/* <button
                   type="button"
                   class="position-absolute top-0 end-0 p-2 m-1 btn-close bg-secondary bg-opacity-10 rounded-pill"
                   aria-label="Close"
-                ></button>
+                ></button> */}
                 {editedNoteId.value === note.id ? (
                   <div class="card-body">
                     <form onSubmit={editNote}>
@@ -411,8 +411,8 @@ export function App() {
                     </div>
                   </div>
                 )}
-                <div class="card-footer text-body-secondary">
-                  Modified on: {new Date(note.updated_at).toDateString()}
+                <div class="card-footer text-body-secondary fw-lighter">
+                  Modified on: {new Date(note.updated_at).toLocaleString()}
                 </div>
               </div>
             </div>

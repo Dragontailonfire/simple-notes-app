@@ -1,5 +1,5 @@
-import { defineConfig } from "vite";
 import preact from "@preact/preset-vite";
+import { defineConfig } from "vitest/config";
 
 const apiTarget = process.env.VITE_SERVER_URL || "http://localhost:4000";
 
@@ -15,5 +15,10 @@ export default defineConfig({
         secure: true,
       },
     },
+  },
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: ["./src/setupTests.ts"],
   },
 });
