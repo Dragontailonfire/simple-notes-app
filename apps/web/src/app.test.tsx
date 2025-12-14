@@ -12,9 +12,10 @@ describe("App component", () => {
         vi.clearAllMocks();
     });
 
-    it("should render", () => {
+    it("should render login page", () => {
         render(<App />);
         expect(screen.getByText("Login to Simple Notes App")).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: /Sign in with GitHub/i })).toBeInTheDocument();
     });
 
     it("should fetch notes when logged in", async () => {
@@ -31,13 +32,13 @@ describe("App component", () => {
         vi.mocked(fetch).mockResolvedValue({
             ok: true,
             json: async () => [
-                { id: 1, content: "A smoke test note", user_id: "test-user-1", created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+                { id: 1, content: "Test Note", user_id: "test-user-1", created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
             ]
         } as Response);
         render(<App />);
 
-        await waitFor(()=>{
-            expect(screen.getByText("A smoke test note")).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByText("Test Note")).toBeInTheDocument();
         });
     });
 });

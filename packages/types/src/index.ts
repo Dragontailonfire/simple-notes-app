@@ -1,8 +1,9 @@
 export interface Note {
-  id: string;
+  id: number;
   user_id: string;
   content: string;
   created_at: string;
+  updated_at: string;
 }
 
 export interface UserSession {

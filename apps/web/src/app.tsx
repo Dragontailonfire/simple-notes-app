@@ -1,7 +1,10 @@
 import { useEffect } from "preact/hooks";
 import { useSignal } from "@preact/signals";
 import { supabase } from "../lib/supabase";
-import githubMark from "./assets/github-mark-white.svg";
+import { Login } from "./components/Login";
+import { NoteList } from "./components/NoteList";
+import type { Note } from "@template/shared-types";
+
 
 const raw = import.meta.env.VITE_SERVER_URL ?? "";
 
@@ -17,7 +20,7 @@ function apiUrl(path: string) {
 
 export function App() {
   const session = useSignal<any>(null);
-  const notes = useSignal<any[]>([]);
+  const notes = useSignal<Note[]>([]);
   const newNote = useSignal("");
   const editedNote = useSignal<string>("");
   const editedNoteId = useSignal<number | null>(null);
@@ -106,9 +109,8 @@ export function App() {
     }
   };
 
-  const editNote = async (e: Event) => {
-    e.preventDefault();
-    if (!session.value) return;
+  const saveEditedNote = async (newContent: string) => {
+    if (!session.value || !editedNoteId.value) return;
 
     try {
       const res = await fetch(apiUrl(`/notes/${editedNoteId.value}`), {
@@ -117,7 +119,7 @@ export function App() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session.value.access_token}`,
         },
-        body: JSON.stringify({ content: editedNote.value }),
+        body: JSON.stringify({ content: newContent }),
       });
 
       if (res.ok) {
@@ -153,32 +155,15 @@ export function App() {
     return name;
   };
 
+  const editANote = (id: number, content: string) => {
+    editedNoteId.value = id;
+    editedNote.value = content ?? "";
+  }
+
   if (!session.value) {
     return (
       <div id="app">
-        <div class="container my-5">
-          <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-5">
-            <h1 class="text-body-emphasis">Login to Simple Notes App</h1>
-            <p class="col-lg-6 mx-auto mb-4">
-              Please login using your GitHub account to manage your important
-              notes easily.
-            </p>
-            <button
-              class="btn btn-dark px-5 mb-5"
-              onClick={login}
-              type="button"
-            >
-              <img
-                src={githubMark}
-                alt="GitHub Invertocat logo"
-                class="github-mark"
-                width="25"
-                height="25"
-              />{" "}
-              Sign in with GitHub
-            </button>
-          </div>
-        </div>
+        <Login onLogin={login} />
       </div>
     );
   }
@@ -186,7 +171,7 @@ export function App() {
   return (
     <div id="app">
       <nav class="navbar navbar-expand-lg bg-body fixed-top">
-        <div class="container-fluid">
+        <div class="container">
           <a class="navbar-brand" href="#">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -286,138 +271,17 @@ export function App() {
             </form>
           </div>
         </div>
-
-        <div class="grid text-center row">
-          {notes.value.map((note) => (
-            <div class="col-sm-6 mb-3 mb-sm-0">
-              <div key={note.id} class="card mb-3 rounded">
-                {/* <button
-                  type="button"
-                  class="position-absolute top-0 end-0 p-2 m-1 btn-close bg-secondary bg-opacity-10 rounded-pill"
-                  aria-label="Close"
-                ></button> */}
-                {editedNoteId.value === note.id ? (
-                  <div class="card-body">
-                    <form onSubmit={editNote}>
-                      <div class="hstack">
-                        <div class="p-2 flex-grow-1">
-                          <input
-                            value={editedNote.value}
-                            onInput={(e) =>
-                              (editedNote.value = e.currentTarget.value)
-                            }
-                            class="form-control"
-                            id="edit-note"
-                            name="edit-note"
-                            aria-label="Edit note"
-                          />
-                        </div>
-                        <div class="p-2 ms-auto">
-                          <button
-                            type="submit"
-                            class="btn btn-sm btn-success"
-                            aria-label="Save note"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
-                              fill="currentColor"
-                              class="bi bi-floppy"
-                              viewBox="0 0 16 16"
-                            >
-                              <path d="M11 2H9v3h2z" />
-                              <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z" />
-                            </svg>
-                          </button>
-                        </div>
-                        <div class="vr"></div>
-                        <div class="p-2">
-                          <button
-                            type="reset"
-                            class="btn btn-sm btn-outline-danger"
-                            onClick={() => {
-                              editedNoteId.value = null;
-                              editedNote.value = "";
-                            }}
-                            aria-label="Cancel edit note"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
-                              fill="currentColor"
-                              class="bi bi-x-circle"
-                              viewBox="0 0 16 16"
-                            >
-                              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                              <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                ) : (
-                  <div class="card-body">
-                    <div class="hstack">
-                      <div class="p-2">
-                        <h5>{note.content}</h5>
-                      </div>
-                      <div class="p-2 ms-auto">
-                        <button
-                          class="btn btn-sm btn-primary"
-                          onClick={() => {
-                            editedNoteId.value = note.id;
-                            editedNote.value = note.content ?? "";
-                          }}
-                          aria-label="Edit note"
-                          disabled={editedNoteId.value !== null}
-                          aria-disabled={
-                            editedNoteId.value !== null ? "true" : "false"
-                          }
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="currentColor"
-                            class="bi bi-pencil"
-                            viewBox="0 0 16 16"
-                          >
-                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
-                          </svg>
-                        </button>
-                      </div>
-                      <div class="vr"></div>
-                      <div class="p-2">
-                        <button
-                          class="btn btn-sm btn-danger"
-                          onClick={() => deleteNote(note.id)}
-                          aria-label="Delete note"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="currentColor"
-                            class="bi bi-trash3"
-                            viewBox="0 0 16 16"
-                          >
-                            <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                <div class="card-footer text-body-secondary fw-lighter">
-                  Modified on: {new Date(note.updated_at).toLocaleString()}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <NoteList
+          notes={notes.value}
+          onDelete={deleteNote}
+          onEdit={editANote}
+          onSaveEditedNote={saveEditedNote}
+          onCancelEditNote={() => {
+            editedNoteId.value = null;
+            editedNote.value = "";
+          }}
+          editedNoteId={editedNoteId.value} 
+          disableEdit={editedNoteId.value !== null}/>
       </div>
       <footer class="d-flex flex-wrap justify-content-between align-items-center p-3 my-4 border-top">
         <div class="col-md-4 d-flex align-items-center">

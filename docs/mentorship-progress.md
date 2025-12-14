@@ -13,7 +13,7 @@
 | **1.3** | **Mocking Modules** | ✅ Done | Created `__mocks__/supabase.ts`. Learned `vi.mock()`. |
 | **1.4** | **Mocking Globals** | ✅ Done | Mocked `globalThis.fetch` to isolate from Network/Server. |
 | **1.5** | **Mock Overrides** | ✅ Done | Used `mockResolvedValue` to simulate specific test cases ("Happy Path"). |
-| **1.6** | **Refactoring for Testability** | 📅 Next | Breaking `App.tsx` into smaller components. |
+| **1.6** | **Refactoring for Testability** | ✅ Done | Extracted `Login`, `NoteList`, `NoteItem`, `EditNoteForm`. |
 | **1.7** | **Interaction Testing** | 📅 Pending | Testing clicks, form inputs (`user-event`). |
 
 ## Module 2: Server Unit Testing
