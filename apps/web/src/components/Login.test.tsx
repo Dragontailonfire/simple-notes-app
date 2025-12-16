@@ -7,7 +7,7 @@ describe("Login component", () => {
 
     it("renders login page", () => {
         render(<Login onLogin={() => { }} />);
-        expect(screen.getByText("Login to Simple Notes App")).toBeInTheDocument();
+        expect(screen.getByText("Simple Notes App")).toBeInTheDocument();
         expect(screen.getByRole("button", { name: /Sign in with GitHub/i })).toBeInTheDocument();
     })
 

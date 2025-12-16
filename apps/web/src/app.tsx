@@ -4,7 +4,7 @@ import { supabase } from "../lib/supabase";
 import { Login } from "./components/Login";
 import { NoteList } from "./components/NoteList";
 import type { Note } from "@template/shared-types";
-
+import { AddNote } from "./components/AddNote";
 
 const raw = import.meta.env.VITE_SERVER_URL ?? "";
 
@@ -63,8 +63,7 @@ export function App() {
     }
   };
 
-  const addNote = async (e: Event) => {
-    e.preventDefault();
+  const addNewNote = async () => {
     if (!session.value) return;
 
     const res = await fetch(apiUrl("/notes"), {
@@ -158,7 +157,7 @@ export function App() {
   const editANote = (id: number, content: string) => {
     editedNoteId.value = id;
     editedNote.value = content ?? "";
-  }
+  };
 
   if (!session.value) {
     return (
@@ -178,11 +177,10 @@ export function App() {
               width="30"
               height="24"
               fill="currentColor"
-              class="bi bi-card-text"
+              class="bi bi-text-fill"
               viewBox="0 0 16 16"
             >
-              <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z" />
-              <path d="M3 5.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M3 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 8m0 2.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5" />
+              <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M5 4h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1m-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5M5 8h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1m0 2h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1" />
             </svg>{" "}
             Simple Notes App
           </a>
@@ -234,43 +232,7 @@ export function App() {
         </div>
       </nav>
       <div class="container text-center mt-5">
-        <div class="row mt-5">
-          <div class="col mt-5">
-            <form onSubmit={addNote}>
-              <div class="input-group mb-3">
-                <input
-                  id="add-note"
-                  name="add-note"
-                  value={newNote.value}
-                  onInput={(e) => (newNote.value = e.currentTarget.value)}
-                  placeholder="Add a new note..."
-                  class="form-control form-control-lg"
-                  type="text"
-                  aria-label="Add new note"
-                />
-                <button
-                  type="submit"
-                  class="btn btn-lg btn-primary"
-                  aria-label="Add note"
-                  disabled={newNote.value === ""}
-                  aria-disabled={newNote.value === "" ? "true" : "false"}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    class="bi bi-plus-circle"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
-                  </svg>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <AddNote newNoteSignal={newNote} onAddNote={addNewNote} />
         <NoteList
           notes={notes.value}
           onDelete={deleteNote}
@@ -280,8 +242,9 @@ export function App() {
             editedNoteId.value = null;
             editedNote.value = "";
           }}
-          editedNoteId={editedNoteId.value} 
-          disableEdit={editedNoteId.value !== null}/>
+          editedNoteId={editedNoteId.value}
+          disableEdit={editedNoteId.value !== null}
+        />
       </div>
       <footer class="d-flex flex-wrap justify-content-between align-items-center p-3 my-4 border-top">
         <div class="col-md-4 d-flex align-items-center">
