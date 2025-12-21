@@ -17,12 +17,12 @@
 | **1.7** | **Interaction Testing** | 📅 Pending | Testing clicks, form inputs (`user-event`). |
 
 ## Module 2: Server Unit Testing
-**Status**: ⚪ Pending
+**Status**: ✅ Done
 
 | Lesson | Topic | Status | Notes |
 | :--- | :--- | :--- | :--- |
-| **2.1** | **Integration vs Unit** | ⚪ Pending | Testing Hono routes via `app.request()`. |
-| **2.2** | **Service Layer** | ⚪ Pending | Extracting logic from `index.ts`. |
+| **2.1** | **Integration vs Unit** | ✅ Done | Tested Hono routes via `app.request()`. |
+| **2.2** | **Service Layer** | ✅ Done | Refactored using Hono Sub-App (`src/notes.ts`). |
 
 ## Module 3: End-to-End Testing (Playwright)
 **Status**: ⚪ Pending

@@ -21,7 +21,6 @@ function apiUrl(path: string) {
 export function App() {
   const session = useSignal<any>(null);
   const notes = useSignal<Note[]>([]);
-  const newNote = useSignal("");
   const editedNote = useSignal<string>("");
   const editedNoteId = useSignal<number | null>(null);
 
@@ -63,8 +62,8 @@ export function App() {
     }
   };
 
-  const addNewNote = async () => {
-    if (!session.value) return;
+  const addNewNote = async (content: string): Promise<boolean> => {
+    if (!session.value) return false;
 
     const res = await fetch(apiUrl("/notes"), {
       method: "POST",
@@ -72,14 +71,15 @@ export function App() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${session.value.access_token}`,
       },
-      body: JSON.stringify({ content: newNote.value }),
+      body: JSON.stringify({ content: content }),
     });
 
     if (res.ok) {
-      newNote.value = "";
       fetchNotes();
+      return true;
     } else {
       console.error("Failed to add note:", res.statusText);
+      return false;
     }
   };
 
@@ -211,20 +211,14 @@ export function App() {
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
+                  width="24"
+                  height="30"
                   fill="currentColor"
-                  class="bi bi-box-arrow-right"
+                  class="bi bi-power"
                   viewBox="0 0 16 16"
                 >
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"
-                  />
-                  <path
-                    fill-rule="evenodd"
-                    d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"
-                  />
+                  <path d="M7.5 1v7h1V1z" />
+                  <path d="M3 8.812a5 5 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812" />
                 </svg>
               </button>
             </form>
@@ -232,7 +226,7 @@ export function App() {
         </div>
       </nav>
       <div class="container text-center mt-5">
-        <AddNote newNoteSignal={newNote} onAddNote={addNewNote} />
+        <AddNote onAddNote={addNewNote} />
         <NoteList
           notes={notes.value}
           onDelete={deleteNote}

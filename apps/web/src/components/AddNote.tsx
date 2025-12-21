@@ -1,18 +1,20 @@
-import { Signal } from "@preact/signals";
+import { useSignal } from "@preact/signals";
 import type { FunctionalComponent } from "preact";
 
 interface AddNoteProps {
-  newNoteSignal: Signal<string>;
-  onAddNote: () => void;
+  onAddNote: (content: string) => Promise<boolean>;
 }
 
 export const AddNote: FunctionalComponent<AddNoteProps> = ({
-  newNoteSignal,
-  onAddNote,
+  onAddNote
 }) => {
-  const handleSubmit = (e: Event) => {
+  const content = useSignal<string>("");
+  const handleSubmit = async (e: Event) => {
     e.preventDefault();
-    onAddNote();
+    const success = await onAddNote(content.value);
+    if (success) {
+      content.value = "";
+    }
   };
   return (
     <div class="row mt-5">
@@ -35,8 +37,8 @@ export const AddNote: FunctionalComponent<AddNoteProps> = ({
             <input
               id="add-note"
               name="add-note"
-              value={newNoteSignal.value}
-              onInput={(e) => (newNoteSignal.value = e.currentTarget.value)}
+              value={content.value}
+              onInput={(e) => (content.value = e.currentTarget.value)}
               placeholder="Add a new note..."
               class="form-control form-control-lg"
               type="text"
@@ -46,19 +48,18 @@ export const AddNote: FunctionalComponent<AddNoteProps> = ({
               type="submit"
               class="btn btn-lg btn-primary"
               aria-label="Add note"
-              disabled={newNoteSignal.value === ""}
-              aria-disabled={newNoteSignal.value === "" ? "true" : "false"}
+              disabled={content.value === ""}
+              aria-disabled={content.value === "" ? "true" : "false"}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
+                width="25"
+                height="30"
                 fill="currentColor"
-                class="bi bi-plus-circle"
+                class="bi bi-plus-lg"
                 viewBox="0 0 16 16"
               >
-                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
               </svg>
             </button>
           </div>

@@ -26,7 +26,7 @@ export function EditNoteForm({ currentNote, onSave, onCancel }: EditNoteFormProp
                             <button type="submit" class="btn btn-sm btn-success" aria-label="Save note"><svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="16"
-                                height="16"
+                                height="20"
                                 fill="currentColor"
                                 class="bi bi-floppy"
                                 viewBox="0 0 16 16"
@@ -47,7 +47,7 @@ export function EditNoteForm({ currentNote, onSave, onCancel }: EditNoteFormProp
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="16"
-                                    height="16"
+                                    height="20"
                                     fill="currentColor"
                                     class="bi bi-x-circle"
                                     viewBox="0 0 16 16"
