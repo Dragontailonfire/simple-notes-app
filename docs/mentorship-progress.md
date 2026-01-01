@@ -25,4 +25,11 @@
 | **2.2** | **Service Layer** | ✅ Done | Refactored using Hono Sub-App (`src/notes.ts`). |
 
 ## Module 3: End-to-End Testing (Playwright)
-**Status**: ⚪ Pending
+**Status**: ✅ Done
+
+| Lesson | Topic | Status | Notes |
+| :--- | :--- | :--- | :--- |
+| **3.1** | **Setup** | ✅ Done | Initialized `apps/e2e` workspace. |
+| **3.2** | **Page Object Model** | ✅ Done | Created `NotePage` abstraction. |
+| **3.3** | **Fixtures** | ✅ Done | Used custom fixtures for cleaner tests. |
+| **3.4** | **Auth State** | ✅ Done | Implemented global setup for Auth. |
