@@ -9,11 +9,14 @@ interface NoteItemProps {
 export function NoteItem({ note, disableEdit, onEdit, onDelete }: NoteItemProps) {
 
     return (
-        <div key={note.id} class="card mb-3 rounded">
+        <div key={note.id} class="card mb-3 rounded text-start">
+            {/* <div class="card-header text-end">                
+            </div> */}
             <div class="card-body shadow-sm">
+                <h5 class="card-title">{note.title}</h5>
                 <div class="hstack">
                     <div class="p-2">
-                        <h5 class="text-wrap">{note.content}</h5>
+                        <p class="card-text">{note.content}</p>
                     </div>
                     <div class="p-2 ms-auto">
                         <button
@@ -57,6 +60,9 @@ export function NoteItem({ note, disableEdit, onEdit, onDelete }: NoteItemProps)
                             </svg>
                         </button>
                     </div>
+                </div>
+                <div class="badge text-bg-primary text-wrap">
+                    new
                 </div>
             </div>
             <div class="card-footer text-body-secondary fw-lighter">

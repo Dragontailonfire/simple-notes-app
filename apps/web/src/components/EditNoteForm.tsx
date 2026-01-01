@@ -3,16 +3,17 @@ import type { Note } from "@template/shared-types";
 
 interface EditNoteFormProps {
     currentNote: Note
-    onSave: (newContent: string) => void
+    onSave: (newContent: string, newTitle: string) => void
     onCancel: () => void
 }
 
 export function EditNoteForm({ currentNote, onSave, onCancel }: EditNoteFormProps) {
     const content = useSignal(currentNote.content);
+    const title = useSignal(currentNote.title);
 
     const handleSubmit = (e: Event) => {
         e.preventDefault();
-        onSave(content.value);
+        onSave(content.value, title.value);
     }
     return (
         <div key={currentNote.id} class="card mb-3 border-0 rounded shadow">
@@ -20,7 +21,10 @@ export function EditNoteForm({ currentNote, onSave, onCancel }: EditNoteFormProp
                 <form onSubmit={handleSubmit}>
                     <div class="hstack">
                         <div class="p-2 flex-grow-1">
-                            <input value={content.value} onInput={(e) => (content.value = e.currentTarget.value)} class="form-control" id="edit-note" name="edit-note" aria-label="Edit note" />
+                            <input value={title.value} onInput={(e) => (title.value = e.currentTarget.value)} class="form-control" id="edit-note-title" name="edit-note-title" aria-label="Edit note title" />
+                        </div>
+                        <div class="p-2 flex-grow-1">
+                            <textarea value={content.value} onInput={(e) => (content.value = e.currentTarget.value)} class="form-control" id="edit-note-content" name="edit-note-content" aria-label="Edit note content" />
                         </div>
                         <div class="p-2 ms-auto">
                             <button type="submit" class="btn btn-sm btn-success" aria-label="Save note"><svg

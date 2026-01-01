@@ -14,6 +14,7 @@ vi.mock("../lib/supabase", () => ({
                 select: () => Promise.resolve({
                     data: [{
                         content: payload.content,
+                        title: payload.title,
                         created_at: new Date().toISOString(),
                         id: 1,
                         updated_at: new Date().toISOString(),
@@ -24,7 +25,7 @@ vi.mock("../lib/supabase", () => ({
             }),
             select: () => ({
                 order: () => Promise.resolve({
-                    data: [{ id: 1, content: "Test note 1" }],
+                    data: [{ id: 1, title: "Test note 1", content: "Save this note" }],
                     error: null
                 })
             })
@@ -36,10 +37,13 @@ describe("Server API", () => {
     it("GET /api/notes returns list of notes", async () => {
         const res = await app.request("/api/notes");
         expect(res.status).toBe(200);
+        const data = await res.json();
+        expect(data[0].content).toBe("Save this note");
+        expect(data[0].title).toBe("Test note 1");
     });
 
     it("POST /api/notes saves a note", async () => {
-        const payload = { content: "Save this note" };
+        const payload = { content: "Save this note", title: "Test Note 1" };
         const req = new Request("http://localhost/api/notes", {
             method: "POST",
             headers: {
@@ -52,5 +56,6 @@ describe("Server API", () => {
         expect(res.status).toBe(200);
         const data = await res.json();
         expect(data[0].content).toBe("Save this note");
+        expect(data[0].title).toBe("Test Note 1");
     })
 });

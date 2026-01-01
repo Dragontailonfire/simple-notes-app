@@ -6,7 +6,7 @@ interface NoteListProps {
     notes: Note[],
     onDelete: (id: number) => void,
     onEdit: (id: number, content: string) => void,
-    onSaveEditedNote: (newContent: string) => void
+    onSaveEditedNote: (newContent: string, newTitle: string) => void
     onCancelEditNote: () => void
     disableEdit: boolean
     editedNoteId: number | null

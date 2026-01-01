@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event";
 
 describe("Edit Note form component", () => {
     const mockNotes = [{
-        id: 1, content: "Test Note", user_id: "user-1", created_at: new Date().toISOString(), updated_at: new Date().toISOString()
+        id: 1, title: "Test Note", content: "Test Note content", user_id: "user-1", created_at: new Date().toISOString(), updated_at: new Date().toISOString()
     }];
 
     it("renders edit form", () => {
@@ -13,7 +13,7 @@ describe("Edit Note form component", () => {
             currentNote={mockNotes[0]}
             onSave={() => { }}
             onCancel={() => { }} />)
-        expect(screen.getByLabelText("Edit note")).toHaveDisplayValue(mockNotes[0].content);
+        expect(screen.getByLabelText("Edit note content")).toHaveDisplayValue(mockNotes[0].content);
         expect(screen.getByRole("button", { name: "Save note" })).toBeInTheDocument();
         expect(screen.getByRole("button", { name: "Cancel edit note" })).toBeInTheDocument();
     })

@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event";
 
 describe("Note list component", () => {
     const mockNotes = [{
-        id: 1, content: "Test Note", user_id: "user-1", created_at: new Date().toISOString(), updated_at: new Date().toISOString()
+        id: 1, content: "Test Note", title: "Test Content", user_id: "user-1", created_at: new Date().toISOString(), updated_at: new Date().toISOString()
     }];
 
     it("renders notes", () => {
@@ -25,6 +25,7 @@ describe("Note list component", () => {
     it("views Edit Form when a note is being edited", async () => {
         const handleEdit = vi.fn();
         render(<NoteList notes={mockNotes} onDelete={()=>{}} onEdit={handleEdit(mockNotes[0].id, "New text")} onSaveEditedNote={() => { }} onCancelEditNote={() => { }} editedNoteId={mockNotes[0].id} disableEdit={true}/>);
-        expect(screen.getByRole("textbox", {name: "Edit note"})).toBeInTheDocument();
+        expect(screen.getByRole("textbox", {name: "Edit note content"})).toBeInTheDocument();
+        expect(screen.getByRole("textbox", {name: "Edit note title"})).toBeInTheDocument();
     });
 })

@@ -33,3 +33,11 @@
 | **3.2** | **Page Object Model** | ✅ Done | Created `NotePage` abstraction. |
 | **3.3** | **Fixtures** | ✅ Done | Used custom fixtures for cleaner tests. |
 | **3.4** | **Auth State** | ✅ Done | Implemented global setup for Auth. |
+
+## Module 4: Applied TDD (Feature Implementation)
+**Status**: ✅ Done
+
+| Lesson | Topic | Status | Notes |
+| :--- | :--- | :--- | :--- |
+| **4.1** | **Migration Strategy** | ✅ Done | Used "Manual Migration" + "Shared Types" update. |
+| **4.2** | **Full Stack TDD** | ✅ Done | Implemented `title` field across DB, Server, and Web using Red-Green-Refactor. |

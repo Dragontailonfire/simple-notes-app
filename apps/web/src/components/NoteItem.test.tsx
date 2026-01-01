@@ -5,7 +5,7 @@ import { NoteItem } from "./NoteItem";
 
 describe("Note item component", () => {
     const mockNote = {
-        id: 1, content: "Test Note", user_id: "user-1", created_at: new Date().toISOString(), updated_at: new Date().toISOString()
+        id: 1, content: "Test Note", title: "Note Content", user_id: "user-1", created_at: new Date().toISOString(), updated_at: new Date().toISOString()
     };
 
     it("renders note", () => {

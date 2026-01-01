@@ -4,10 +4,15 @@ import z from "zod";
 import { zValidator } from "@hono/zod-validator";
 
 const noteSchema = z.object({
+    title: z
+        .string()
+        .min(1)
+        .max(100)
+        .transform((val) => val.trim()),
     content: z
         .string()
         .min(1)
-        .max(500)
+        .max(1000)
         .transform((val) => val.trim()),
 });
 
@@ -28,7 +33,7 @@ app.get("/", async (c) => {
 });
 
 app.post("/", zValidator("json", noteSchema), async (c) => {
-    const content = c.req.valid("json").content;
+    const { content, title } = c.req.valid("json");
     const supabase = getSupabase(c);
 
     const {
@@ -43,6 +48,7 @@ app.post("/", zValidator("json", noteSchema), async (c) => {
         .from("notes")
         .insert({
             content,
+            title,
             user_id: user.id,
         })
         .select();
@@ -60,7 +66,7 @@ app.patch("/:id", zValidator("json", noteSchema), async (c) => {
     if (Number.isNaN(id)) {
         return c.json({ error: "Invalid id" }, 400);
     }
-    const content = c.req.valid("json").content;
+    const { content, title } = c.req.valid("json");
     const supabase = getSupabase(c);
 
     const {
@@ -75,6 +81,7 @@ app.patch("/:id", zValidator("json", noteSchema), async (c) => {
         .from("notes")
         .update({
             content,
+            title
         })
         .eq("id", id)
         .eq("user_id", user.id)

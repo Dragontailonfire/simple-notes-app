@@ -71,7 +71,7 @@ export function App() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${session.value.access_token}`,
       },
-      body: JSON.stringify({ content: content }),
+      body: JSON.stringify({ content: content, title: content }),
     });
 
     if (res.ok) {
@@ -108,7 +108,7 @@ export function App() {
     }
   };
 
-  const saveEditedNote = async (newContent: string) => {
+  const saveEditedNote = async (newContent: string, newTitle: string) => {
     if (!session.value || !editedNoteId.value) return;
 
     try {
@@ -118,7 +118,7 @@ export function App() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session.value.access_token}`,
         },
-        body: JSON.stringify({ content: newContent }),
+        body: JSON.stringify({ content: newContent, title: newTitle }),
       });
 
       if (res.ok) {
