@@ -14,9 +14,9 @@ interface NoteListProps {
 
 export function NoteList({ notes, onDelete, onEdit, onSaveEditedNote, onCancelEditNote, editedNoteId, disableEdit }: NoteListProps) {
     return (
-        <div class="grid text-center row">
+        <div class="row g-2 justify-content-center">
             {notes.map((note: Note) => (
-                <div class="col-sm-6 mb-3 mb-sm-0">
+                <div class="col-auto">
                     {editedNoteId === note.id ? (
                         <EditNoteForm
                             currentNote={note}

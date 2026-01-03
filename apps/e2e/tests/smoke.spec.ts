@@ -10,9 +10,9 @@ test.describe("Smoke tests for Simple Notes App", () => {
     NOTE_ITEMS.forEach(note => {
         test(`should allow me to add and delete note: '${note}'`, async ({ notePage, page }) => {
             await notePage.addNote(note);
-            await expect(page.getByText(note)).toBeVisible();
+            await expect(page.getByRole("heading", { name: note })).toBeVisible();
             await notePage.removeNote(note);
-            await expect(page.getByText(note)).not.toBeVisible();
+            await expect(page.getByRole("heading", { name: note })).not.toBeVisible();
         })
     });
 })

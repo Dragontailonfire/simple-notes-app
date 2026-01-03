@@ -19,7 +19,7 @@ export class NotePage {
     }
 
     async removeNote(content: string) {
-        const note = this.page.getByText(content);
+        const note = this.page.getByRole("heading", { name: content });
         await note.hover();
         this.page.on('dialog', dialog => dialog.accept());
         await this.page.locator('.card-body').filter({ hasText: content }).getByRole("button", { name: "Delete note" }).click();
