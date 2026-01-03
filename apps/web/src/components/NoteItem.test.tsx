@@ -1,7 +1,10 @@
 import { render, screen } from "@testing-library/preact";
 import { describe, expect, it, vi } from "vitest";
-import userEvent from "@testing-library/user-event";
 import { NoteItem } from "./NoteItem";
+
+vi.mock("wouter", () => ({
+    Link: (props: any) => <a {...props}>{props.children}</a>,
+}));
 
 describe("Note item component", () => {
     const mockNote = {
@@ -9,25 +12,7 @@ describe("Note item component", () => {
     };
 
     it("renders note", () => {
-        render(<NoteItem note={mockNote} onDelete={() => { }} onEdit={() => { }} disableEdit={false} />)
+        render(<NoteItem note={mockNote} />)
         expect(screen.getByText("Test Note")).toBeInTheDocument();
     })
-
-    it("calls onDelete when delete button is clicked", async () => {
-        const handleDelete = vi.fn();
-        const user = userEvent.setup();
-        render(<NoteItem note={mockNote} onDelete={handleDelete} onEdit={() => { }} disableEdit={false} />);
-        const deleteButton = screen.getByRole("button", { name: "Delete note" });
-        await user.click(deleteButton);
-        expect(handleDelete).toHaveBeenCalled();
-    });
-
-    it("calls onEdit when edit button is clicked", async () => {
-        const handleEdit = vi.fn();
-        const user = userEvent.setup();
-        render(<NoteItem note={mockNote} onDelete={() => { }} onEdit={handleEdit} disableEdit={false} />);
-        const editButton = screen.getByRole("button", { name: "Edit note" });
-        await user.click(editButton);
-        expect(handleEdit).toHaveBeenCalled();
-    });
 })

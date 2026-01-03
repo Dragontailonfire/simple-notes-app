@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/preact";
 import { App } from "./app";
 import { supabase } from "../lib/supabase";
+import { Router } from "wouter";
 
 vi.mock("../lib/supabase");
 globalThis.fetch = vi.fn();
@@ -19,23 +20,28 @@ describe("App component", () => {
     });
 
     it("should fetch notes when logged in", async () => {
-        vi.mocked(supabase.auth.getSession).mockResolvedValue({
-            data: {
-                session: {
-                    access_token: "test-token",
-                    user: { id: "test-user-1", email: "test@example.com" }
-                }
-            },
-            error: null
-        } as any);
+        vi.mocked(supabase.auth.onAuthStateChange).mockImplementation(((callback: any) => {
+            const session = {
+                access_token: "test-token",
+                user: { id: "test-user-1", email: "test@example.com" }
+            };
+
+            callback("SIGNED_IN", session as any);
+            return { data: { subscription: { unsubscribe: vi.fn() } } };
+        }) as any);
 
         vi.mocked(fetch).mockResolvedValue({
             ok: true,
             json: async () => [
-                { id: 1, content: "Test Note", user_id: "test-user-1", created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+                { id: 1, title: "Test Note", content: "Test Note content", user_id: "test-user-1", created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
             ]
         } as Response);
-        render(<App />);
+
+        render(
+        <Router>
+            <App />
+        </Router>
+        );
 
         await waitFor(() => {
             expect(screen.getByText("Test Note")).toBeInTheDocument();

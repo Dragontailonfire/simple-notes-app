@@ -4,15 +4,13 @@ import { Login } from "./components/Login";
 import { AddNote } from "./components/AddNote";
 import { addNote, fetchNotes, getDisplayName, login, logout, notes, session } from "./store";
 import { Home } from "./pages/Home";
+import { Route, Switch } from "wouter";
+import { NoteDetail } from "./pages/NoteDetail";
+import { Common } from "./pages/Common";
 
 export function App() {
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session: s } }) => {
-      session.value = s;
-      if (s) fetchNotes();
-    });
-
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, s) => {
@@ -39,7 +37,7 @@ export function App() {
       <header class="d-flex flex-wrap align-items-center justify-content-between border-bottom py-3 mb-4">
         <nav class="navbar navbar-expand-lg bg-body fixed-top">
           <div class="container">
-            <a class="navbar-brand d-inline-flex" href="#">
+            <a class="navbar-brand d-inline-flex" href="/">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="30"
@@ -93,16 +91,15 @@ export function App() {
           </div>
         </nav>
       </header>
-      <div class="container text-center mt-5">
-        {/* <AddNote onAddNote={addNewNote} /> */}
-        <Home />
-      </div>
-      <footer class="d-flex flex-wrap justify-content-between align-items-center p-3 my-4 border-top">
-        <div class="col-md-4 d-flex align-items-center">
-          <span class="mb-3 mb-md-0 text-body-secondary">
-            © 2025 Dragontailonfire
-          </span>
-        </div>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/note/:id" component={NoteDetail} />
+        <Route component={Common} />
+      </Switch>
+      <footer class="fixed-bottom bg-body-tertiary mt-auto">
+        <span class="text-body-secondary p-1">
+          © 2026 Dragontailonfire
+        </span>
       </footer>
     </div>
   );
