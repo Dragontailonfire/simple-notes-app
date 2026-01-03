@@ -1,28 +1,11 @@
 import { useEffect } from "preact/hooks";
-import { useSignal } from "@preact/signals";
 import { supabase } from "../lib/supabase";
 import { Login } from "./components/Login";
-import { NoteList } from "./components/NoteList";
-import type { Note } from "@template/shared-types";
 import { AddNote } from "./components/AddNote";
-
-const raw = import.meta.env.VITE_SERVER_URL ?? "";
-
-const API_BASE = ((): string => {
-  if (!raw) return "/api"; // dev: use Vite proxy
-  const hasProto = raw.startsWith("http://") || raw.startsWith("https://");
-  return (hasProto ? raw : `https://${raw}`).replace(/\/$/, "");
-})();
-
-function apiUrl(path: string) {
-  return `${API_BASE.replace(/\/$/, "")}/${String(path).replace(/^\//, "")}`;
-}
+import { addNote, fetchNotes, getDisplayName, login, logout, notes, session } from "./store";
+import { Home } from "./pages/Home";
 
 export function App() {
-  const session = useSignal<any>(null);
-  const notes = useSignal<Note[]>([]);
-  const editedNote = useSignal<string>("");
-  const editedNoteId = useSignal<number | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session: s } }) => {
@@ -42,122 +25,6 @@ export function App() {
       subscription.unsubscribe();
     };
   }, []);
-
-  const fetchNotes = async () => {
-    try {
-      if (!session.value) return;
-
-      const res = await fetch(apiUrl("/notes"), {
-        headers: {
-          Authorization: `Bearer ${session.value.access_token}`,
-        },
-      });
-      if (res.ok) {
-        notes.value = await res.json();
-      } else {
-        console.error("Failed to fetch notes:", res.statusText);
-      }
-    } catch (error) {
-      console.error("Error fetching notes:", error);
-    }
-  };
-
-  const addNewNote = async (content: string): Promise<boolean> => {
-    if (!session.value) return false;
-
-    const res = await fetch(apiUrl("/notes"), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${session.value.access_token}`,
-      },
-      body: JSON.stringify({ content: content, title: content }),
-    });
-
-    if (res.ok) {
-      fetchNotes();
-      return true;
-    } else {
-      console.error("Failed to add note:", res.statusText);
-      return false;
-    }
-  };
-
-  const deleteNote = async (id: number) => {
-    if (!session.value) return;
-    const proceed = window.confirm(
-      "Are you sure you want to delete this note?"
-    );
-    if (!proceed) return;
-
-    try {
-      const res = await fetch(apiUrl(`/notes/${id}`), {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${session.value.access_token}`,
-        },
-      });
-
-      if (res.ok) {
-        notes.value = notes.value.filter((n) => n.id !== id);
-      } else {
-        console.error("Failed to delete note:", res.statusText);
-      }
-    } catch (err) {
-      console.error("Error deleting note:", err);
-    }
-  };
-
-  const saveEditedNote = async (newContent: string, newTitle: string) => {
-    if (!session.value || !editedNoteId.value) return;
-
-    try {
-      const res = await fetch(apiUrl(`/notes/${editedNoteId.value}`), {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value.access_token}`,
-        },
-        body: JSON.stringify({ content: newContent, title: newTitle }),
-      });
-
-      if (res.ok) {
-        editedNoteId.value = null;
-        editedNote.value = "";
-        fetchNotes();
-      } else {
-        console.error("Failed to edit note:", res.statusText);
-      }
-    } catch (err) {
-      console.error("Error editing note:", err);
-    }
-  };
-
-  const login = async () => {
-    await supabase.auth.signInWithOAuth({ provider: "github" });
-  };
-
-  const logout = () => {
-    supabase.auth.signOut();
-  };
-
-  const getDisplayName = () => {
-    const user = session.value?.user;
-    if (!user) return null;
-    const meta = user.user_metadata || {};
-    const name =
-      meta.full_name ||
-      meta.name ||
-      meta.preferred_username ||
-      user.email?.split("@")[0] ||
-      "User";
-    return name;
-  };
-
-  const editANote = (id: number, content: string) => {
-    editedNoteId.value = id;
-    editedNote.value = content ?? "";
-  };
 
   if (!session.value) {
     return (
@@ -186,7 +53,7 @@ export function App() {
               </svg>
             </a>
             <form class="justify-content-center">
-              <AddNote onAddNote={addNewNote} />
+              <AddNote onAddNote={addNote} />
               {/* <input class="form-control" type="search" placeholder="Search" aria-label="Search" hidden /> */}
             </form>
             <button
@@ -228,18 +95,7 @@ export function App() {
       </header>
       <div class="container text-center mt-5">
         {/* <AddNote onAddNote={addNewNote} /> */}
-        <NoteList
-          notes={notes.value}
-          onDelete={deleteNote}
-          onEdit={editANote}
-          onSaveEditedNote={saveEditedNote}
-          onCancelEditNote={() => {
-            editedNoteId.value = null;
-            editedNote.value = "";
-          }}
-          editedNoteId={editedNoteId.value}
-          disableEdit={editedNoteId.value !== null}
-        />
+        <Home />
       </div>
       <footer class="d-flex flex-wrap justify-content-between align-items-center p-3 my-4 border-top">
         <div class="col-md-4 d-flex align-items-center">
