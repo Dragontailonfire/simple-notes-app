@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/preact";
 import { App } from "./app";
 import { supabase } from "../lib/supabase";
-import { Router } from "wouter";
+import { Router } from "wouter-preact";
 
 vi.mock("../lib/supabase");
 globalThis.fetch = vi.fn();

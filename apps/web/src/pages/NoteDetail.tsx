@@ -1,4 +1,4 @@
-import { Link, useLocation, useRoute } from "wouter"
+import { Link, useLocation, useRoute } from "wouter-preact"
 import { deleteNote, notes, updateNote } from "../store";
 import { useState } from "preact/hooks";
 
@@ -9,12 +9,12 @@ export function NoteDetail() {
     const noteId = params?.id ? parseInt(params.id, 10) : null;
     const note = notes.value.find((n) => n.id === noteId);
 
-    if (!note) {
+    if (!note || !match) {
         return (
-            <div className="container mt-5">
-                <div class="position-relative p-5 text-center text-muted bg-body border rounded-5">
-                    <h1 class="text-body-emphasis">Note not found</h1>
-                    <Link type="button" href="/" class="btn btn-primary">Go Home</Link>
+            <div className="container">
+                <div class="p-5 text-center rounded bg-warning-subtle">
+                    <h1 class="text-body-emphasis fw-bolder p-5">Note not found! </h1>
+                    <Link href="/" class="btn btn-primary">Go Home</Link>
                 </div>
             </div>
         )
@@ -30,7 +30,9 @@ export function NoteDetail() {
         if (!isDirty) return;
 
         const success = await updateNote(note.id, content, title);
-        if (success) alert("Saved!");
+        if (success) {
+            alert("Saved!");
+        }
     };
 
     const onDelete = async () => {
@@ -40,41 +42,41 @@ export function NoteDetail() {
         }
     };
 
-    const onCancel = () => {
+    const onClear = () => {
         setTitle(note.title);
         setContent(note.content);
     };
 
     return (
-        <div className="container mt-5">
-            <div key={note.id} class="position-relative card border text-start">
+        <div className="container-fluid">
+            <div key={note.id} class="position-relative card border-0 h-100 text-start">
                 <form onSubmit={onSave}>
-                    <div class="card-header">
-                        <div class="hstack">
-                            <div class="p-1 flex-grow-1">
-                                <Link type="button" href="/" class="btn border btn-outline-secondary">
+                    <div class="card-header border-0 shadow-sm rounded-3">
+                        <div class="row row-cols-auto justify-content-between g-3">
+                            <div class="col">
+                                <Link href="/" class="btn btn-sm btn-outline-secondary border">
                                     <svg xmlns="http://www.w3.org/2000/svg"
                                         width="16"
                                         height="16"
                                         fill="currentColor"
-                                        class="bi bi-chevron-left me-1"
+                                        class="bi bi-chevron-left"
                                         viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
-                                    </svg> Back
+                                        <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"></path>                                    </svg> Back
                                 </Link>
                             </div>
-                            <div class="p-1 ms-auto">
+                            <div class="col">
                                 <button
                                     type="submit"
+                                    role="button"
                                     class="btn btn-sm btn-primary"
                                     aria-label="Save changes"
-                                    disabled={!isDirty}>
+                                    hidden={!isDirty}>
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         width="16"
                                         height="16"
                                         fill="currentColor"
-                                        class="bi bi-floppy me-1"
+                                        class="bi bi-floppy"
                                         viewBox="0 0 16 16"
                                     >
                                         <path d="M11 2H9v3h2z" />
@@ -82,68 +84,74 @@ export function NoteDetail() {
                                     </svg> Save changes
                                 </button>
                             </div>
-                            <div class="p-1">
+                            <div class="col">
                                 <button
                                     type="button"
-                                    class="btn btn-sm btn-outline-danger border-0"
-                                    aria-label="Cancel"
-                                    onClick={onCancel}
-                                    disabled={!isDirty}
+                                    class="btn btn-sm btn-outline-danger"
+                                    aria-label="Clear"
+                                    onClick={onClear}
+                                    hidden={!isDirty}
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         width="16"
                                         height="16"
                                         fill="currentColor"
-                                        class="bi bi-x-circle me-1"
+                                        class="bi bi-x-circle"
                                         viewBox="0 0 16 16"
                                     >
                                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
                                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
-                                    </svg> Cancel
+                                    </svg> Clear
                                 </button>
                             </div>
-                            <div class="p-1">
+                            <div class="col">
                                 <button
                                     type="button"
-                                    class="m-1 btn btn-danger"
-                                    aria-label="Delete note"
+                                    class="btn btn-sm btn-danger"
+                                    aria-label="Delete"
                                     onClick={onDelete}>
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         width="16"
                                         height="16"
                                         fill="currentColor"
-                                        class="bi bi-trash me-1"
+                                        class="bi bi-trash"
                                         viewBox="0 0 16 16"
                                     >
                                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
                                         <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
-                                    </svg> Delete note
+                                    </svg> Delete
                                 </button>
                             </div>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <small class="card-subtitle fw-lighter text-body-secondary">
-                            Created on: {new Date(note.created_at).toLocaleString()}
-                        </small>
-                        <h1 class="card-title">
+                    <div class="card-body border-0">
+                        <div class="card-title">
                             <input
                                 value={title}
                                 onInput={(e) => setTitle(e.currentTarget.value)}
                                 class="form-control form-control-lg border" />
-                        </h1>
-                        <p class="card-text mb-3">
+                        </div>
+                        <div class="card-text">
                             <textarea
                                 value={content}
                                 onInput={(e) => setContent(e.currentTarget.value)}
                                 class="form-control form-control-lg border"
-                                rows="15" />
-                        </p>
+                                rows={10}
+                            />
+                        </div>
                     </div>
-                    <div class="card-footer text-body-secondary fw-lighter">
-                        Last updated: {new Date(note.updated_at).toLocaleString()}
+                    <div class="card-footer border-0 shadow-sm rounded-3 text-body-secondary fw-light">
+                        <div class="row row-cols-auto justify-content-between">
+                            <small class="col font-monospace">{location}</small>
+                            <small class="col font-monospace">
+                                Last updated: {new Date(note.updated_at).toLocaleString()}
+                            </small>
+                            <small class="col font-monospace">
+                                Created on: {new Date(note.created_at).toLocaleString()}
+                            </small>
+                        </div>
                     </div>
                 </form>
             </div>

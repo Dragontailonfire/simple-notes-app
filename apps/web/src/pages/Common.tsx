@@ -1,11 +1,11 @@
-import { Link } from "wouter";
+import { Link } from "wouter-preact";
 
 export function Common() {
     return (
-        <div className="container mt-5 pt-5">
-            <div class="position-relative p-5 text-center text-muted bg-body border rounded-5">
-                <h1 class="text-body-emphasis">Are you lost?</h1>
-                <Link type="button" href="/" class="btn btn-primary">Go Home</Link>
+        <div className="container">
+            <div class="p-5 justify-content-center h-100 text-center rounded bg-danger-subtle">
+                <h1 class="text-body-emphasis fw-bolder p-5">Are you lost?</h1>
+                <Link href="/" class="btn btn-primary ">Go Home</Link>
             </div>
         </div>
     )

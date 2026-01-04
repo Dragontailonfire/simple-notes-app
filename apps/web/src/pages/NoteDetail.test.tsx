@@ -4,7 +4,7 @@ import { NoteDetail } from "./NoteDetail";
 import { notes } from "../store";
 import * as storeModule from "../store";
 
-vi.mock("wouter", () => ({
+vi.mock("wouter-preact", () => ({
     useRoute: () => [true, { id: "1" }],
     Link: (props: any) => <a {...props}>{props.children}</a>,
     useLocation: () => ["/note/1", vi.fn()],
@@ -39,16 +39,16 @@ describe("NoteDetail page", () => {
         render(<NoteDetail />);
         const titleInput = screen.getByDisplayValue("Original Title");
 
-        const saveBtn = screen.getByRole("button", { name: /Save changes/i });
-        const cancelBtn = screen.getByRole("button", { name: /Cancel/i });
-        const deleteBtn = screen.getByRole("button", { name: /Delete note/i });
-        expect(saveBtn).toBeDisabled();
-        expect(cancelBtn).toBeDisabled();
+        const saveBtn = screen.getByLabelText("Save changes");
+        const clearBtn = screen.getByLabelText("Clear");
+        const deleteBtn = screen.getByRole("button", { name: /Delete/i });
+        expect(saveBtn).not.toBeVisible();
+        expect(clearBtn).not.toBeVisible();
         expect(deleteBtn).not.toBeDisabled();
-        
+
         fireEvent.input(titleInput, { target: { value: "New Title" } });
-        expect(saveBtn).not.toBeDisabled();
-        expect(cancelBtn).not.toBeDisabled();
+        expect(saveBtn).toBeVisible();
+        expect(clearBtn).toBeVisible();
 
         saveBtn.click();
 

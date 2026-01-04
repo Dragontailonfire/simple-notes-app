@@ -4,7 +4,7 @@ import { Login } from "./components/Login";
 import { AddNote } from "./components/AddNote";
 import { addNote, fetchNotes, getDisplayName, login, logout, notes, session } from "./store";
 import { Home } from "./pages/Home";
-import { Route, Switch } from "wouter";
+import { Route, Switch } from "wouter-preact";
 import { NoteDetail } from "./pages/NoteDetail";
 import { Common } from "./pages/Common";
 
@@ -34,9 +34,9 @@ export function App() {
 
   return (
     <div id="app">
-      <header class="d-flex flex-wrap align-items-center justify-content-between border-bottom py-3 mb-4">
-        <nav class="navbar navbar-expand-lg bg-body fixed-top">
-          <div class="container">
+      <header class="sticky-top">
+        <nav class="navbar navbar-expand-lg bg-body sticky-top">
+          <div class="container-fluid">
             <a class="navbar-brand d-inline-flex" href="/">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -71,14 +71,14 @@ export function App() {
               <span class="navbar-text me-3">Hello, {getDisplayName()}</span>
               <button
                 onClick={logout}
-                class="btn btn-danger btn-sm rounded-pill"
+                class="btn btn-danger btn-sm"
                 aria-label="Logout"
                 type="button"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="40"
+                  width="20"
+                  height="24"
                   fill="currentColor"
                   class="bi bi-power"
                   viewBox="0 0 16 16"
@@ -91,16 +91,18 @@ export function App() {
           </div>
         </nav>
       </header>
-      <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/note/:id" component={NoteDetail} />
-        <Route component={Common} />
-      </Switch>
-      <footer class="fixed-bottom bg-body-tertiary mt-auto">
+      <main class="">
+        <Switch>
+          <Route path="/" component={Home} />
+          <Route path="/note/:id" component={NoteDetail} />
+          <Route component={Common} />
+        </Switch>        
+      </main>
+      {/* <footer class="fixed-bottom bg-body-tertiary h-10 mt-5">
         <span class="text-body-secondary p-1">
           © 2026 Dragontailonfire
         </span>
-      </footer>
+      </footer> */}
     </div>
   );
 }
