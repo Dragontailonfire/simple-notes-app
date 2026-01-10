@@ -32,8 +32,8 @@ export function App() {
 
   return (
     <>
-      <header class="sticky-top container border-bottom bg-body my-2">
-        <div class="row row-cols-auto justify-content-evenly align-items-center my-2">
+      <header class="sticky-top container bg-body my-2">
+        <div class="row row-cols-auto justify-content-evenly align-items-center my-2 bg-body-secondary border-bottom border-5 rounded-3 p-2">
           <div class="col">
             <Link class="align-items-center link-body-emphasis text-decoration-none" href="/">
               <svg

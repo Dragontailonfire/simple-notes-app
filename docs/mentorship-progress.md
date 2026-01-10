@@ -41,30 +41,33 @@
 | :--- | :--- | :--- | :--- |
 | **4.1** | **Migration Strategy** | ✅ Done | Used "Manual Migration" + "Shared Types" update. |
 | **4.2** | **Full Stack TDD** | ✅ Done | Implemented `title` field across DB, Server, and Web using Red-Green-Refactor. |
-1: 
-2: ## Module 5: Client-Side Routing & Architecture
-3: **Status**: ✅ Done
-4: 
-5: | Lesson | Topic | Status | Notes |
-6: | :--- | :--- | :--- | :--- |
-7: | **5.1** | **Global Store** | ✅ Done | Extracted state to `store.ts` using Preact Signals. |
-8: | **5.2** | **SPA Routing** | ✅ Done | Implemented `wouter-preact` with Home and Detail routes. |
-9: | **5.3** | **Architecture Summary** | ✅ Done | Documented in [day-5-routing.md](file:///Users/narayanan/root/github/simple-notes-app/docs/web/architecture/day-5-routing.md). |
-10: 
-11: ## Module 6: Advanced Feature Implementation
-12: **Status**: ✅ Done
-13: 
-14: | Lesson | Topic | Status | Notes |
-15: | :--- | :--- | :--- | :--- |
-16: | **6.1** | **Note Detail Editing** | ✅ Done | Implemented full-page edit with TDD. |
-17: | **6.2** | **Dirty State Logic** | ✅ Done | Added safety checks for unsaved changes (Save/Clear). |
-18: | **6.3** | **Integrated Delete** | ✅ Done | Moved delete to detail view with confirmation. |
-19: | **6.4** | **Test Stabilization** | ✅ Done | Fixed all Unit/E2E tests after refactor. |
-20: | **6.5** | **Feature Summary** | ✅ Done | Documented in [day-6-note-detail.md](file:///Users/narayanan/root/github/simple-notes-app/docs/web/features/day-6-note-detail.md). |
-21: 
-22: ## Module 7: Database Setup (Code-First)
-23: **Status**: 📅 Pending
-24: 
-25: | Lesson | Topic | Status | Notes |
-26: | :--- | :--- | :--- | :--- |
-27: | **7.1** | **Migration Tooling** | 📅 Pending | TBD |
+
+## Module 5: Client-Side Routing & Architecture
+**Status**: ✅ Done
+
+| Lesson | Topic | Status | Notes |
+| :--- | :--- | :--- | :--- |
+| **5.1** | **Global Store** | ✅ Done | Extracted state to `store.ts` using Preact Signals. |
+| **5.2** | **SPA Routing** | ✅ Done | Implemented `wouter-preact` with Home and Detail routes. |
+| **5.3** | **Architecture Summary** | ✅ Done | Documented in [day-5-routing.md](file:///Users/narayanan/root/github/simple-notes-app/docs/web/architecture/day-5-routing.md). |
+
+## Module 6: Advanced Feature Implementation
+**Status**: ✅ Done
+
+| Lesson | Topic | Status | Notes |
+| :--- | :--- | :--- | :--- |
+| **6.1** | **Note Detail Editing** | ✅ Done | Implemented full-page edit with TDD. |
+| **6.2** | **Dirty State Logic** | ✅ Done | Added safety checks for unsaved changes (Save/Clear). |
+| **6.3** | **Integrated Delete** | ✅ Done | Moved delete to detail view with confirmation. |
+| **6.4** | **Test Stabilization** | ✅ Done | Fixed all Unit/E2E tests after refactor. |
+| **6.5** | **Feature Summary** | ✅ Done | Documented in [day-6-note-detail.md](file:///Users/narayanan/root/github/simple-notes-app/docs/web/features/day-6-note-detail.md). |
+
+## Module 7: Database Setup (Code-First)
+**Status**: ✅ Done
+
+| Lesson | Topic | Status | Notes |
+| :--- | :--- | :--- | :--- |
+| **7.1** | **Drizzle Refactor** | ✅ Done | Replaced Supabase client with Drizzle ORM in routes. |
+| **7.2** | **Ownership Logic** | ✅ Done | Implemented `and(eq(id), eq(userId))` for security. |
+| **7.3** | **Global Sync** | ✅ Done | Refactored shared types to camelCase. |
+| **7.4** | **Summary** | ✅ Done | Documented in [day-7-drizzle.md](file:///Users/narayanan/root/github/simple-notes-app/docs/server/db/day-7-drizzle.md). |

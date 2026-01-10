@@ -23,7 +23,7 @@ export function NoteItem({ note }: NoteItemProps) {
             </div>
             <div class="card-footer border-0 shadow-sm bg-transparent">
                 <small class="fw-lighter text-body-secondary">
-                    Last updated {new Date(note.updated_at).toLocaleString()}
+                    Last updated {new Date(note.updatedAt).toLocaleString()}
                 </small>
             </div>
         </div>

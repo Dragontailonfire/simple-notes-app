@@ -2,6 +2,9 @@ import { Hono } from "hono";
 import { getSupabase } from "../lib/supabase";
 import z from "zod";
 import { zValidator } from "@hono/zod-validator";
+import { db } from "./db/connect";
+import { notes } from "./db/schema";
+import { eq, desc, and } from "drizzle-orm";
 
 const noteSchema = z.object({
     title: z
@@ -20,16 +23,24 @@ const app = new Hono();
 
 app.get("/", async (c) => {
     const supabase = getSupabase(c);
-    const { data, error } = await supabase
-        .from("notes")
-        .select("*")
-        .order("created_at", { ascending: false });
 
-    if (error) {
-        return c.json({ error: error.message }, 500);
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+        return c.json({ error: authError?.message }, authError?.status as any || 401);
     }
 
-    return c.json(data);
+    try {
+        const result = await db.select()
+            .from(notes)
+            .where(eq(notes.userId, user.id))
+            .orderBy(desc(notes.createdAt));
+
+        return c.json(result);
+    }
+    catch (error) {
+        return c.json({ error: "Unable to fetch notes!" }, 500);
+    }
+
 });
 
 app.post("/", zValidator("json", noteSchema), async (c) => {
@@ -41,23 +52,22 @@ app.post("/", zValidator("json", noteSchema), async (c) => {
         error: authError,
     } = await supabase.auth.getUser();
     if (authError || !user) {
-        return c.json({ error: "Unauthorized" }, 401);
+        return c.json({ error: authError?.message }, authError?.status as any || 401);
     }
 
-    const { data, error } = await supabase
-        .from("notes")
-        .insert({
-            content,
-            title,
-            user_id: user.id,
-        })
-        .select();
+    const note: typeof notes.$inferInsert = {
+        title: title,
+        content: content,
+        userId: user.id
+    };
 
-    if (error) {
-        return c.json({ error: error.message }, 500);
+    try {
+        const result = await db.insert(notes).values(note).returning();
+        return c.json(result);
     }
-
-    return c.json(data);
+    catch (error) {
+        return c.json({ error: "Unable to add new note!" }, 500);
+    }
 });
 
 app.patch("/:id", zValidator("json", noteSchema), async (c) => {
@@ -74,24 +84,20 @@ app.patch("/:id", zValidator("json", noteSchema), async (c) => {
         error: authError,
     } = await supabase.auth.getUser();
     if (authError || !user) {
-        return c.json({ error: "Unauthorized" }, 401);
+        return c.json({ error: authError?.message }, authError?.status as any || 401);
     }
 
-    const { data, error } = await supabase
-        .from("notes")
-        .update({
-            content,
-            title
-        })
-        .eq("id", id)
-        .eq("user_id", user.id)
-        .select();
-
-    if (error) {
-        return c.json({ error: error.message }, 500);
+    try {
+        const result = await db
+            .update(notes)
+            .set({ content: content, title: title })
+            .where(and(eq(notes.userId, user.id), eq(notes.id, id)))
+            .returning();
+        return c.json(result);
     }
-
-    return c.json(data);
+    catch (error) {
+        return c.json({ error: "Unable to edit the note!" }, 500);
+    }
 });
 
 app.delete("/:id", async (c) => {
@@ -108,25 +114,19 @@ app.delete("/:id", async (c) => {
         error: authError,
     } = await supabase.auth.getUser();
     if (authError || !user) {
-        return c.json({ error: "Unauthorized" }, 401);
+        return c.json({ error: authError?.message }, authError?.status as any || 401);
     }
 
-    const { data, error } = await supabase
-        .from("notes")
-        .delete()
-        .eq("id", id)
-        .eq("user_id", user.id)
-        .select();
-
-    if (error) {
-        return c.json({ error: error.message }, 500);
+    try {
+        const result = await db
+            .delete(notes)
+            .where(and(eq(notes.userId, user.id), eq(notes.id, id)))
+            .returning();
+        return c.json(result);
     }
-
-    if (!data || data.length === 0) {
-        return c.json({ error: "Not found" }, 404);
+    catch (error) {
+        return c.json({ error: "Unable to delete the note!" }, 500);
     }
-
-    return c.json(data[0]);
 });
 
 export default app;

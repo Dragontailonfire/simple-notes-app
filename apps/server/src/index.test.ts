@@ -8,29 +8,73 @@ vi.mock("../lib/supabase", () => ({
                 data: { user: { id: "test-user" } },
                 error: null
             })
-        },
-        from: () => ({
-            insert: (payload: any) => ({
-                select: () => Promise.resolve({
-                    data: [{
-                        content: payload.content,
-                        title: payload.title,
-                        created_at: new Date().toISOString(),
-                        id: 1,
-                        updated_at: new Date().toISOString(),
-                        user_id: "test-user"
-                    }],
-                    error: null
-                })
-            }),
-            select: () => ({
-                order: () => Promise.resolve({
-                    data: [{ id: 1, title: "Test note 1", content: "Save this note" }],
-                    error: null
+        }
+    })
+}));
+
+vi.mock("./db/connect", () => ({
+    db: {
+        select: () => ({
+            from: () => ({
+                where: () => ({
+                    orderBy: () => Promise.resolve([
+                        {
+                            id: 1,
+                            title: "Test note 1",
+                            content: "Save this note",
+                            createdAt: new Date().toISOString(),
+                            updatedAt: new Date().toISOString(),
+                            userId: "test-user"
+                        }
+                    ])
                 })
             })
-        })
-    })
+        }),
+        insert: () => ({
+            values: (payload: any) => ({
+                returning: () => Promise.resolve([
+                    {
+                        id: 2,
+                        title: payload.title,
+                        content: payload.content,
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString(),
+                        userId: "test-user"
+                    }
+                ])
+            })
+        }),
+        update: () => ({
+            set: (payload: any) => ({
+                where: () => ({
+                    returning: () => Promise.resolve([
+                        {
+                            id: 1,
+                            title: payload.title,
+                            content: payload.content,
+                            createdAt: new Date().toISOString(),
+                            updatedAt: new Date().toISOString(),
+                            userId: "test-user"
+                        }
+                    ])
+                })
+            })
+        }),
+        delete: () => ({
+            where: () => ({
+                returning: () => Promise.resolve([
+                    {
+                        id: 1,
+                        title: "Test note 1",
+                        content: "Save this note",
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString(),
+                        userId: "test-user"
+                    }
+                ])
+            })
+        }),
+    }
 }));
 
 describe("Server API", () => {

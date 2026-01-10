@@ -4,7 +4,7 @@ import { useState } from "preact/hooks";
 
 export function NoteDetail() {
     const [match, params] = useRoute("/note/:id");
-    const [location, setLocation] = useLocation();
+    const [_, setLocation] = useLocation();
 
     const noteId = params?.id ? parseInt(params.id, 10) : null;
     const note = notes.value.find((n) => n.id === noteId);
@@ -141,12 +141,11 @@ export function NoteDetail() {
                 </div>
                 <div class="card-footer border-0 shadow-sm rounded-3 text-body-secondary fw-light">
                     <div class="row row-cols-auto justify-content-between">
-                        <small class="col font-monospace">{location}</small>
                         <small class="col font-monospace">
-                            Last updated: {new Date(note.updated_at).toLocaleString()}
+                            Last updated: {new Date(note.updatedAt).toLocaleString()}
                         </small>
                         <small class="col font-monospace">
-                            Created on: {new Date(note.created_at).toLocaleString()}
+                            Created on: {new Date(note.createdAt).toLocaleString()}
                         </small>
                     </div>
                 </div>

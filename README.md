@@ -2,77 +2,56 @@
 
 A simple notes app created from the Monorepo template with Preact and Hono.
 
+## Technology Stack
+
+- **Frontend**: Preact + Vite + Bootstrap 5 + @preact/signals
+- **Backend**: Hono + Drizzle ORM + Supabase Auth
+- **E2E Testing**: Playwright (with Page Object Model)
+- **Unit/Integration**: Vitest + @testing-library/preact
+
 ## Installation & Local Development
 
 - Install All Dependencies: Run this from the repository root:
 
 ```Bash
-pnpm install
-```
+   pnpm install
+   ```
 
-- Run Locally (Two Terminal Tabs): In Terminal 1 (Backend):
+2. **Backend**: Start the Hono server:
+   ```bash
+   pnpm server
+   ```
+   *Runs on port 4000.*
 
-```Bash
-pnpm server
-```
+3. **Frontend**: Start the Vite dev server:
+   ```bash
+   pnpm web
+   ```
+   *Runs on [localhost:3000](http://localhost:3000). API calls are proxied to the backend.*
 
-Server is now running on port 4000 (as per ts-node default or custom config)
-
-- In Terminal 2 (Frontend):
-
-```Bash
-pnpm web
-```
-
-Vite is now running on port 3000 and proxying API calls to Terminal 1
-
-## Folder structure
+## Monorepo Structure
 
 ```
-/bare-metal-template
+.
 ├── apps/
-│   ├── web/        <-- Preact + Vite Frontend
-│   │   ├── src/
-│   │   ├── package.json
-│   │   ├── .env
-│   │   ├── tsconfig.json
-│   │   └── vite.config.ts  <-- Proxies API to simplify local dev
-│   ├── server/        <-- Hono Backend
-│   │   ├── src/
-│   │   ├── .env
-│   │   ├── package.json
-│   │   └── tsconfig.json
+│   ├── web/        <-- Preact Frontend (Vite)
+│   ├── server/     <-- Hono Backend (Drizzle ORM)
+│   └── e2e/        <-- Playwright E2E Test Suite
 ├── packages/
-│   └── types/      <-- Shared TypeScript interfaces
-│       └── package.json
-│       └── tsconfig.json
-├── package.json    <-- Root package file (scripts, dependencies)
-├── pnpm-workspace.yaml <-- Defines the monorepo structure
-└── tsconfig.json   <-- Root TypeScript config
+│   └── types/      <-- Shared TypeScript Interfaces
+├── docs/           <-- Mentorship Log & Architecture Docs
+├── package.json    <-- Workspace Scripts
+└── pnpm-workspace.yaml
 ```
 
-## Debug
+## Documentation
 
-Use `effect()` from `@preact/signals` to log when signal changes.
+For a detailed breakdown of the development journey and core concepts, refer to:
+- [Mentorship Progress Log](file:///Users/narayanan/root/github/simple-notes-app/docs/mentorship-progress.md)
+- [Server & DB Architecture](file:///Users/narayanan/root/github/simple-notes-app/docs/server/db/day-7-drizzle.md)
+- [Client-Side Routing](file:///Users/narayanan/root/github/simple-notes-app/docs/web/architecture/day-5-routing.md)
 
-```typescript
-// Debug: auto-log changes and expose signals to the console
-effect(() => console.log("newNote →", newNote.value));
-effect(() => console.log("editedNote →", editedNote.value));
-effect(() => console.log("editedNoteId →", editedNoteId.value));
-effect(() => console.log("notes.length →", notes.value.length));
-// Inspect/update from browser console: __SIGNALS.editedNote.value = "foo"
-(window as any).__SIGNALS = {
-  session,
-  notes,
-  newNote,
-  editedNote,
-  editedNoteId,
-};
-```
+## Debugging
 
-## References
+We use `@preact/signals` for state. You can inspect the global state directly from the browser console via `window.__SIGNALS`.
 
-### Icons
-
-- [Note icons](https://www.svgrepo.com/collection/kalai-oval-interface-icons/)

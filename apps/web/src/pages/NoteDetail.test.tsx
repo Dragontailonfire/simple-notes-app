@@ -22,7 +22,7 @@ vi.mock("../store", async (importOriginal) => {
 describe("NoteDetail page", () => {
     beforeEach(() => {
         notes.value = [
-            { id: 1, title: "Original Title", content: "Original Content", user_id: "u1", created_at: "", updated_at: "" }
+            { id: 1, title: "Original Title", content: "Original Content", userId: "u1", createdAt: "", updatedAt: "" }
         ];
         vi.clearAllMocks();
     });
