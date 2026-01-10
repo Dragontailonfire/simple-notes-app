@@ -7,7 +7,7 @@ describe("Add Note component", () => {
   it("renders add form", async () => {
     const addNote = vi.fn();
     render(<AddNote onAddNote={addNote} />);
-    expect(screen.getByPlaceholderText("Add a new note...")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Add a quick note...")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Add note/i })).toBeInTheDocument();
   });
 
@@ -15,7 +15,7 @@ describe("Add Note component", () => {
     const addNote = vi.fn();
     const user = userEvent.setup();
     render(<AddNote onAddNote={addNote} />);
-    const addNoteTextField = screen.getByPlaceholderText("Add a new note...");
+    const addNoteTextField = screen.getByPlaceholderText("Add a quick note...");
     expect(addNoteTextField).toBeInTheDocument();
     await user.type(addNoteTextField, "New Note");
     expect(addNoteTextField).toHaveValue("New Note");

@@ -57,12 +57,12 @@ export const addNote = async (content: string): Promise<boolean> => {
     }
 };
 
-export const deleteNote = async (id: number) => {
-    if (!session.value) return;
+export const deleteNote = async (id: number): Promise<boolean> => {
+    if (!session.value) return false;
     const proceed = window.confirm(
         "Are you sure you want to delete this note?"
     );
-    if (!proceed) return;
+    if (!proceed) return false;
 
     try {
         const res = await fetch(apiUrl(`/notes/${id}`), {
@@ -74,11 +74,14 @@ export const deleteNote = async (id: number) => {
 
         if (res.ok) {
             notes.value = notes.value.filter((n) => n.id !== id);
+            return true;
         } else {
             console.error("Failed to delete note:", res.statusText);
+            return false;
         }
     } catch (err) {
         console.error("Error deleting note:", err);
+        return false;
     }
 };
 

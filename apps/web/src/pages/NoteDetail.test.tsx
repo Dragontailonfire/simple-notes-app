@@ -34,8 +34,6 @@ describe("NoteDetail page", () => {
     });
 
     it("updates note and enables/disables buttons based on dirty state", async () => {
-        const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
-
         render(<NoteDetail />);
         const titleInput = screen.getByDisplayValue("Original Title");
 
@@ -55,7 +53,6 @@ describe("NoteDetail page", () => {
         expect(storeModule.updateNote).toHaveBeenCalledWith(1, "Original Content", "New Title");
 
         deleteBtn.click();
-        expect(confirmSpy).toHaveBeenCalled();
         expect(storeModule.deleteNote).toHaveBeenCalledWith(1);
     });
 });
