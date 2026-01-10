@@ -8,7 +8,7 @@ vi.mock("wouter", () => ({
 
 describe("Note item component", () => {
     const mockNote = {
-        id: 1, content: "Test Note", title: "Note Content", user_id: "user-1", created_at: new Date().toISOString(), updated_at: new Date().toISOString()
+        id: 1, content: "Test Note", title: "Note Content", userId: "user-1", createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
     };
 
     it("renders note", () => {

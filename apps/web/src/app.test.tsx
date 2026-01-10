@@ -33,7 +33,7 @@ describe("App component", () => {
         vi.mocked(fetch).mockResolvedValue({
             ok: true,
             json: async () => [
-                { id: 1, title: "Test Note", content: "Test Note content", user_id: "test-user-1", created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+                { id: 1, title: "Test Note", content: "Test Note content", userId: "test-user-1", createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
             ]
         } as Response);
 
