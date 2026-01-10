@@ -38,6 +38,7 @@ app.get("/", async (c) => {
         return c.json(result);
     }
     catch (error) {
+        console.error(`GET - ${error}`);
         return c.json({ error: "Unable to fetch notes!" }, 500);
     }
 
@@ -66,6 +67,7 @@ app.post("/", zValidator("json", noteSchema), async (c) => {
         return c.json(result);
     }
     catch (error) {
+        console.error(`GET - ${error}`);
         return c.json({ error: "Unable to add new note!" }, 500);
     }
 });
@@ -96,6 +98,7 @@ app.patch("/:id", zValidator("json", noteSchema), async (c) => {
         return c.json(result);
     }
     catch (error) {
+        console.error(`GET - ${error}`);
         return c.json({ error: "Unable to edit the note!" }, 500);
     }
 });
@@ -125,6 +128,7 @@ app.delete("/:id", async (c) => {
         return c.json(result);
     }
     catch (error) {
+        console.error(`GET - ${error}`);
         return c.json({ error: "Unable to delete the note!" }, 500);
     }
 });
