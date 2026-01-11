@@ -21,7 +21,6 @@ function apiUrl(path: string) {
 export const fetchNotes = async () => {
     try {
         if (!session.value) return;
-
         const res = await fetch(apiUrl("/notes"), {
             headers: {
                 Authorization: `Bearer ${session.value.access_token}`,
@@ -29,6 +28,9 @@ export const fetchNotes = async () => {
         });
         if (res.ok) {
             notes.value = await res.json();
+            if (!sortByDescending.value) {
+                sortNotesInAscending();
+            }
         } else {
             console.error("Failed to fetch notes:", res.statusText);
         }

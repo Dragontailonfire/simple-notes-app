@@ -9,9 +9,9 @@ interface NoteItemProps {
 export function NoteItem({ note }: NoteItemProps) {
     return (
         <Link
-            class="text-decoration-none text-reset stretched-link"
+            class="text-decoration-none text-reset stretched-link position-relative"
             href={`/note/${note.id}`}>
-            <div key={note.id} class="card text-start h-100 border" style="max-width: 18rem;">
+            <div class="card text-start h-100 border" style="max-width: 18rem;">
                 <div class="card-header border-0 shadow-sm">
                     <div class="card-title fw-medium">
                         {note.title}

@@ -9,7 +9,7 @@ export function NoteList({ notes }: NoteListProps) {
     return (
         <div class="row gy-4 row-cols-auto justify-content-evenly">
             {notes.map((note: Note) => (
-                <div class="col">
+                <div class="col" key={note.id}>
                     <NoteItem note={note} />
                 </div>
             ))}

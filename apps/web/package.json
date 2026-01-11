@@ -1,7 +1,7 @@
 {
   "name": "web",
   "description": "Web page for the notes app",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "module",
   "scripts": {
     "dev": "vite",

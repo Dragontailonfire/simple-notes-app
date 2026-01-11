@@ -16,7 +16,7 @@ export function HomePageToolBar() {
                             </svg>
                             <span class="visually-hidden">Sort in Descending</span>
                         </label>
-                        <input type="radio" class="btn-check" name="btnradiosort" onClick={sortNotesInAscending} id="sortByAscending" autocomplete="off" />
+                        <input type="radio" class="btn-check" name="btnradiosort" onClick={sortNotesInAscending} id="sortByAscending" autocomplete="off" checked={!sortByDescending.value}/>
                         <label class="btn btn-outline-primary" for="sortByAscending">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-numeric-down" viewBox="0 0 16 16">
                                 <path d="M12.438 1.668V7H11.39V2.684h-.051l-1.211.859v-.969l1.262-.906h1.046z"></path>
