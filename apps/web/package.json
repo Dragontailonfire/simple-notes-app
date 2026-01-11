@@ -1,6 +1,5 @@
 {
   "name": "web",
-  "private": true,
   "description": "Web page for the notes app",
   "version": "1.1.0",
   "type": "module",
