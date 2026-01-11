@@ -1,7 +1,7 @@
 import { useEffect } from "preact/hooks";
 import { supabase } from "../lib/supabase";
 import { Login } from "./components/Login";
-import { fetchNotes, getDisplayName, login, logout, notes, session } from "./store";
+import { fetchNotes, getDisplayName, logout, notes, session } from "./store";
 import { Home } from "./pages/Home";
 import { Route, Switch, Link } from "wouter-preact";
 import { NoteDetail } from "./pages/NoteDetail";
@@ -25,7 +25,7 @@ export function App() {
 
   if (!session.value) {
     return (
-      <Login onLogin={login} />
+      <Login />
     );
   }
 
@@ -35,9 +35,9 @@ export function App() {
         <div class="row row-cols-auto justify-content-between align-items-center bg-body-tertiary p-2 shadow-sm">
           <div class="col">
             <Link class="align-items-center link-body-emphasis text-decoration-none" href="/">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-card-heading" viewBox="0 0 16 16">
-                <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z"></path>
-                <path d="M3 8.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m0-5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5z"></path>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-file-post" viewBox="0 0 16 16">
+                <path d="M4 3.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5z"></path>
+                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1"></path>
               </svg> {`${getDisplayName()}'s Notes`}
             </Link>
           </div>
@@ -57,8 +57,6 @@ export function App() {
         </div>
       </header>
       <main class="container my-2">
-        <div class="pdt-4">
-        </div>
         <Switch>
           <Route path="/" component={Home} />
           <Route path="/note/:id" component={NoteDetail} />

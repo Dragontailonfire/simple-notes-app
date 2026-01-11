@@ -1,10 +1,7 @@
 import githubMark from "../assets/github-mark-white.svg";
+import { loginWithGitHub } from "../store";
 
-interface LoginProps {
-  onLogin: () => void;
-}
-
-export function Login({ onLogin }: LoginProps) {
+export function Login() {
   return (
     <div class="px-4 py-5 my-5 text-center">
       <div class="mx-auto">
@@ -22,7 +19,7 @@ export function Login({ onLogin }: LoginProps) {
           Please login using your GitHub account to manage your important notes
           easily.
         </p>
-        <button class="btn btn-dark border px-5 mb-5" onClick={onLogin} type="button">
+        <button class="btn btn-dark border px-5 mb-5" onClick={loginWithGitHub} type="button">
           <img
             src={githubMark}
             alt="GitHub Invertocat logo"

@@ -123,7 +123,7 @@ export const updateNote = async (id: number, newContent: string, newTitle: strin
     }
 };
 
-export const login = async () => {
+export const loginWithGitHub = async () => {
     await supabase.auth.signInWithOAuth({ provider: "github" });
 };
 

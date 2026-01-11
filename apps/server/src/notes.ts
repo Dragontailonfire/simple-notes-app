@@ -3,7 +3,7 @@ import { getSupabase } from "../lib/supabase";
 import z from "zod";
 import { zValidator } from "@hono/zod-validator";
 import { db } from "./db/connect";
-import { notes } from "./db/schema";
+import { notes } from "./db/schema/notes";
 import { eq, desc, and } from "drizzle-orm";
 
 const noteSchema = z.object({
