@@ -1,7 +1,7 @@
 {
   "name": "e2e",
   "version": "1.0.0",
-  "description": "",
+  "description": "Test framework for end to end scenarios",
   "main": "index.js",
   "scripts": {
     "test": "exec playwright test",
