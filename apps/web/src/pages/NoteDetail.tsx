@@ -48,7 +48,7 @@ export function NoteDetail() {
     return (
         <div key={note.id} class="card border-0 h-100">
             <form onSubmit={onSave}>
-                <div class="card-header border-5 shadow-sm rounded-3">
+                <div class="card-header bg-body-secondary border-5 shadow-sm rounded-3">
                     <div class="row row-cols-auto justify-content-between g-3">
                         <div class="col">
                             <Link href="/" class="btn btn-sm btn-outline-secondary border">

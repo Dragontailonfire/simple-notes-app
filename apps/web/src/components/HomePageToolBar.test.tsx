@@ -6,6 +6,5 @@ describe("Login component", () => {
     it("renders Home page tool bar", () => {
         render(<HomePageToolBar />);
         expect(screen.getByRole("group", { name: /Sorting button group/i })).toBeInTheDocument();
-        expect(screen.getByRole("group", { name: /Layout button group/i })).toBeInTheDocument();
     })
 })

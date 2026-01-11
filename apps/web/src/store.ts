@@ -4,6 +4,7 @@ import { supabase } from "../lib/supabase";
 
 export const session = signal<any>(null);
 export const notes = signal<Note[]>([]);
+export const sortByDescending = signal<boolean>(true);
 
 const raw = import.meta.env.VITE_SERVER_URL ?? "";
 
@@ -35,6 +36,15 @@ export const fetchNotes = async () => {
         console.error("Error fetching notes:", error);
     }
 };
+
+export const sortNotesInAscending = () => {
+    notes.value = [...notes.value].sort((a, b) => a.id - b.id);
+    sortByDescending.value = false;
+}
+export const sortNotesInDescending = () => {
+    notes.value = [...notes.value].sort((a, b) => b.id - a.id);
+    sortByDescending.value = true;
+}
 
 export const addNote = async (content: string): Promise<boolean> => {
     if (!session.value) return false;
