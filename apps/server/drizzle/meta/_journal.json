@@ -8,6 +8,13 @@
       "when": 1768040401454,
       "tag": "0000_flashy_switch",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1768321457935,
+      "tag": "0001_rapid_shriek",
+      "breakpoints": true
     }
   ]
 }

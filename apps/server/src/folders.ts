@@ -1,23 +1,18 @@
 import { Hono } from "hono";
 import { getSupabase } from "../lib/supabase";
+import { db } from "./db/connect";
+import { folders } from "./db/schema/folders";
+import { eq, desc, and } from "drizzle-orm";
 import z from "zod";
 import { zValidator } from "@hono/zod-validator";
-import { db } from "./db/connect";
-import { notes } from "./db/schema/notes";
-import { eq, desc, and } from "drizzle-orm";
 
-const noteSchema = z.object({
-    title: z
+const folderSchema = z.object({
+    name: z
         .string()
         .min(1)
         .max(100)
         .transform((val) => val.trim()),
-    content: z
-        .string()
-        .min(1)
-        .max(1000)
-        .transform((val) => val.trim()),
-    folderId: z
+    parentId: z
         .number()
         .nullable()
         .optional()
@@ -35,21 +30,20 @@ app.get("/", async (c) => {
 
     try {
         const result = await db.select()
-            .from(notes)
-            .where(eq(notes.userId, user.id))
-            .orderBy(desc(notes.createdAt));
+            .from(folders)
+            .where(eq(folders.userId, user.id))
+            .orderBy(desc(folders.createdAt));
 
         return c.json(result);
     }
     catch (error) {
-        console.error(`GET notes - ${error}`);
-        return c.json({ error: "Unable to fetch notes!" }, 500);
+        console.error(`GET folders- ${error}`);
+        return c.json({ error: "Unable to fetch folders!" }, 500);
     }
+})
 
-});
-
-app.post("/", zValidator("json", noteSchema), async (c) => {
-    const { content, title, folderId } = c.req.valid("json");
+app.post("/", zValidator("json", folderSchema), async (c) => {
+    const { name, parentId } = c.req.valid("json");
     const supabase = getSupabase(c);
 
     const {
@@ -60,30 +54,29 @@ app.post("/", zValidator("json", noteSchema), async (c) => {
         return c.json({ error: authError?.message }, authError?.status as any || 401);
     }
 
-    const note: typeof notes.$inferInsert = {
-        title: title,
-        content: content,
-        userId: user.id,
-        folderId: folderId
+    const folder: typeof folders.$inferInsert = {
+        name: name,
+        parentId: parentId,
+        userId: user.id
     };
 
     try {
-        const result = await db.insert(notes).values(note).returning();
+        const result = await db.insert(folders).values(folder).returning();
         return c.json(result);
     }
     catch (error) {
-        console.error(`POST notes - ${error}`);
-        return c.json({ error: "Unable to add new note!" }, 500);
+        console.error(`POST folders - ${error}`);
+        return c.json({ error: "Unable to add new folder!" }, 500);
     }
 });
 
-app.patch("/:id", zValidator("json", noteSchema), async (c) => {
+app.patch("/:id", zValidator("json", folderSchema), async (c) => {
     const idParam = c.req.param("id");
     const id = parseInt(idParam, 10);
     if (Number.isNaN(id)) {
         return c.json({ error: "Invalid id" }, 400);
     }
-    const { content, title, folderId } = c.req.valid("json");
+    const { name, parentId } = c.req.valid("json");
     const supabase = getSupabase(c);
 
     const {
@@ -96,15 +89,15 @@ app.patch("/:id", zValidator("json", noteSchema), async (c) => {
 
     try {
         const result = await db
-            .update(notes)
-            .set({ content: content, title: title, folderId: folderId })
-            .where(and(eq(notes.userId, user.id), eq(notes.id, id)))
+            .update(folders)
+            .set({ name: name, parentId: parentId })
+            .where(and(eq(folders.userId, user.id), eq(folders.id, id)))
             .returning();
         return c.json(result);
     }
     catch (error) {
-        console.error(`PATCH notes - ${error}`);
-        return c.json({ error: "Unable to edit the note!" }, 500);
+        console.error(`PATCH folders - ${error}`);
+        return c.json({ error: "Unable to edit the folder!" }, 500);
     }
 });
 
@@ -127,14 +120,14 @@ app.delete("/:id", async (c) => {
 
     try {
         const result = await db
-            .delete(notes)
-            .where(and(eq(notes.userId, user.id), eq(notes.id, id)))
+            .delete(folders)
+            .where(and(eq(folders.userId, user.id), eq(folders.id, id)))
             .returning();
         return c.json(result);
     }
     catch (error) {
-        console.error(`DELETE notes - ${error}`);
-        return c.json({ error: "Unable to delete the note!" }, 500);
+        console.error(`DELETE folders - ${error}`);
+        return c.json({ error: "Unable to delete the folder!" }, 500);
     }
 });
 

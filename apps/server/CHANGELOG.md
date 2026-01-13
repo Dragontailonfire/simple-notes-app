@@ -1,5 +1,11 @@
 # server
 
+## 2.0.0
+
+### Major Changes
+
+- Adding folders table and related CRUD end points. Modify notes table and end points to save folder.
+
 ## 1.0.2
 
 ### Patch Changes
