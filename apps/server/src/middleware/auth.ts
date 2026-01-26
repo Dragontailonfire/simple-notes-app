@@ -1,4 +1,4 @@
-import { getSupabase } from "@template/server/lib/supabase";
+import { getSupabase } from "../../lib/supabase";
 import { createMiddleware } from "hono/factory";
 
 export const messageMiddleware = createMiddleware(async (c, next) => {
