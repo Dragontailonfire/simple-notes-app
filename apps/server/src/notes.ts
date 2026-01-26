@@ -1,10 +1,11 @@
 import { Hono } from "hono";
-import { getSupabase } from "../lib/supabase";
 import z from "zod";
 import { zValidator } from "@hono/zod-validator";
 import { db } from "./db/connect";
 import { notes } from "./db/schema/notes";
 import { eq, desc, and } from "drizzle-orm";
+import { folders } from "./db/schema/folders";
+import { Variables } from "./middleware/auth";
 
 const noteSchema = z.object({
     title: z
@@ -17,64 +18,40 @@ const noteSchema = z.object({
         .min(1)
         .max(1000)
         .transform((val) => val.trim()),
-    folderId: z
-        .number()
-        .nullable()
-        .optional()
+    folderId: z.number(),
 });
 
-const app = new Hono();
+const app = new Hono<{ Variables: Variables }>();
 
 app.get("/", async (c) => {
-    const supabase = getSupabase(c);
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-        return c.json({ error: authError?.message }, authError?.status as any || 401);
-    }
-
-    try {
-        const result = await db.select()
-            .from(notes)
-            .where(eq(notes.userId, user.id))
-            .orderBy(desc(notes.createdAt));
-
-        return c.json(result);
-    }
-    catch (error) {
-        console.error(`GET notes - ${error}`);
-        return c.json({ error: "Unable to fetch notes!" }, 500);
-    }
-
+    const result = await db
+        .select({
+            id: notes.id,
+            userId: notes.userId,
+            content: notes.content,
+            createdAt: notes.createdAt,
+            updatedAt: notes.updatedAt,
+            title: notes.title,
+            folderDetails: { id: folders.id, name: folders.name },
+        })
+        .from(notes)
+        .where(eq(notes.userId, c.get("userId")))
+        .orderBy(desc(notes.createdAt))
+        .innerJoin(folders, eq(notes.folderId, folders.id));
+    return c.json(result);
 });
 
 app.post("/", zValidator("json", noteSchema), async (c) => {
     const { content, title, folderId } = c.req.valid("json");
-    const supabase = getSupabase(c);
-
-    const {
-        data: { user },
-        error: authError,
-    } = await supabase.auth.getUser();
-    if (authError || !user) {
-        return c.json({ error: authError?.message }, authError?.status as any || 401);
-    }
 
     const note: typeof notes.$inferInsert = {
         title: title,
         content: content,
-        userId: user.id,
-        folderId: folderId
+        userId: c.get("userId"),
+        folderId: folderId,
     };
-
-    try {
-        const result = await db.insert(notes).values(note).returning();
-        return c.json(result);
-    }
-    catch (error) {
-        console.error(`POST notes - ${error}`);
-        return c.json({ error: "Unable to add new note!" }, 500);
-    }
+    const result = await db.insert(notes).values(note).returning();
+    return c.json(result);
 });
 
 app.patch("/:id", zValidator("json", noteSchema), async (c) => {
@@ -84,28 +61,12 @@ app.patch("/:id", zValidator("json", noteSchema), async (c) => {
         return c.json({ error: "Invalid id" }, 400);
     }
     const { content, title, folderId } = c.req.valid("json");
-    const supabase = getSupabase(c);
-
-    const {
-        data: { user },
-        error: authError,
-    } = await supabase.auth.getUser();
-    if (authError || !user) {
-        return c.json({ error: authError?.message }, authError?.status as any || 401);
-    }
-
-    try {
-        const result = await db
-            .update(notes)
-            .set({ content: content, title: title, folderId: folderId })
-            .where(and(eq(notes.userId, user.id), eq(notes.id, id)))
-            .returning();
-        return c.json(result);
-    }
-    catch (error) {
-        console.error(`PATCH notes - ${error}`);
-        return c.json({ error: "Unable to edit the note!" }, 500);
-    }
+    const result = await db
+        .update(notes)
+        .set({ content: content, title: title, folderId: folderId })
+        .where(and(eq(notes.userId, c.get("userId")), eq(notes.id, id)))
+        .returning();
+    return c.json(result);
 });
 
 app.delete("/:id", async (c) => {
@@ -114,28 +75,11 @@ app.delete("/:id", async (c) => {
     if (Number.isNaN(id)) {
         return c.json({ error: "Invalid id" }, 400);
     }
-
-    const supabase = getSupabase(c);
-
-    const {
-        data: { user },
-        error: authError,
-    } = await supabase.auth.getUser();
-    if (authError || !user) {
-        return c.json({ error: authError?.message }, authError?.status as any || 401);
-    }
-
-    try {
-        const result = await db
-            .delete(notes)
-            .where(and(eq(notes.userId, user.id), eq(notes.id, id)))
-            .returning();
-        return c.json(result);
-    }
-    catch (error) {
-        console.error(`DELETE notes - ${error}`);
-        return c.json({ error: "Unable to delete the note!" }, 500);
-    }
+    const result = await db
+        .delete(notes)
+        .where(and(eq(notes.userId, c.get("userId")), eq(notes.id, id)))
+        .returning();
+    return c.json(result);
 });
 
 export default app;

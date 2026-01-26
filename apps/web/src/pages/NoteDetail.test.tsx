@@ -15,14 +15,25 @@ vi.mock("../store", async (importOriginal) => {
     return {
         ...actual,
         updateNote: vi.fn(),
-        deleteNote: vi.fn()
+        deleteNote: vi.fn(),
     };
 });
 
 describe("NoteDetail page", () => {
     beforeEach(() => {
         notes.value = [
-            { id: 1, title: "Original Title", content: "Original Content", userId: "u1", createdAt: "", updatedAt: "" }
+            {
+                id: 1,
+                title: "Original Title",
+                content: "Original Content",
+                userId: "u1",
+                createdAt: "",
+                updatedAt: "",
+                folderDetails: {
+                    id: 1,
+                    name: "Test folder",
+                },
+            },
         ];
         vi.clearAllMocks();
     });
@@ -40,17 +51,22 @@ describe("NoteDetail page", () => {
         const saveBtn = screen.getByLabelText("Save changes");
         const clearBtn = screen.getByLabelText("Clear");
         const deleteBtn = screen.getByRole("button", { name: /Delete/i });
-        expect(saveBtn).not.toBeVisible();
-        expect(clearBtn).not.toBeVisible();
-        expect(deleteBtn).not.toBeDisabled();
+        expect(saveBtn).toBeDisabled();
+        expect(clearBtn).toBeDisabled();
+        expect(deleteBtn).toBeEnabled();
 
         fireEvent.input(titleInput, { target: { value: "New Title" } });
-        expect(saveBtn).toBeVisible();
-        expect(clearBtn).toBeVisible();
+        expect(saveBtn).toBeEnabled();
+        expect(clearBtn).toBeEnabled();
 
         saveBtn.click();
 
-        expect(storeModule.updateNote).toHaveBeenCalledWith(1, "Original Content", "New Title");
+        expect(storeModule.updateNote).toHaveBeenCalledWith(
+            1,
+            "Original Content",
+            "New Title",
+            1,
+        );
 
         deleteBtn.click();
         expect(storeModule.deleteNote).toHaveBeenCalledWith(1);

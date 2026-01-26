@@ -1,6 +1,7 @@
-import { Link, useLocation, useRoute } from "wouter-preact"
-import { deleteNote, notes, updateNote } from "../store";
+import { Link, useLocation, useRoute } from "wouter-preact";
+import { deleteNote, folderTree, notes, updateNote } from "../store";
 import { useState } from "preact/hooks";
+import { FoldersDropDownSelectorItem } from "../components/FoldersDropDownSelectorItem";
 
 export function NoteDetail() {
     const [match, params] = useRoute("/note/:id");
@@ -12,22 +13,32 @@ export function NoteDetail() {
     if (!note || !match) {
         return (
             <div class="p-5 text-center rounded bg-warning-subtle">
-                <h1 class="text-body-emphasis fw-bolder p-5">Note not found! </h1>
-                <Link href="/" class="btn btn-primary">Go Home</Link>
+                <h1 class="text-body-emphasis fw-bolder p-5">
+                    Note not found!{" "}
+                </h1>
+                <Link href="/" class="btn btn-primary">
+                    Go Home
+                </Link>
             </div>
-        )
+        );
     }
 
     const [title, setTitle] = useState(note.title);
     const [content, setContent] = useState(note.content);
+    const [folderId, setFolderId] = useState(note.folderDetails.id);
+    const [folderName, setFolderName] = useState(note.folderDetails.name);
 
-    const isDirty = (title !== note.title) || (content !== note.content);
+    const isDirty =
+        title !== note.title ||
+        content !== note.content ||
+        folderId !== note.folderDetails.id ||
+        folderName !== note.folderDetails.name;
 
     const onSave = async (e: Event) => {
         e.preventDefault();
         if (!isDirty) return;
 
-        const success = await updateNote(note.id, content, title);
+        const success = await updateNote(note.id, content, title, folderId);
         if (success) {
             alert("Saved!");
         }
@@ -43,31 +54,47 @@ export function NoteDetail() {
     const onClear = () => {
         setTitle(note.title);
         setContent(note.content);
+        setFolderId(note.folderDetails.id);
+        setFolderName(note.folderDetails.name);
     };
 
     return (
-        <div key={note.id} class="card border-0 h-100">
+        <div key={note.id} class=" card border-0 h-100 shadow-none  rounded-4">
             <form onSubmit={onSave}>
-                <div class="card-header bg-body-secondary border-5 shadow-sm rounded-3">
-                    <div class="row row-cols-auto justify-content-between g-3">
+                <div class="card-header border-0 rounded bg-primary-subtle  rounded-4">
+                    <div
+                        role="toolbar"
+                        class="btn-toolbar row row-cols-auto justify-content-between g-3"
+                    >
                         <div class="col">
-                            <Link href="/" class="btn btn-sm btn-outline-secondary border">
-                                <svg xmlns="http://www.w3.org/2000/svg"
+                            <Link
+                                href="/"
+                                class="btn btn-sm btn-outline-secondary  rounded-4"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
                                     width="16"
                                     height="16"
                                     fill="currentColor"
                                     class="bi bi-chevron-left"
-                                    viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"></path>                                    </svg> Back
+                                    viewBox="0 0 16 16"
+                                >
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"
+                                    ></path>
+                                </svg>
+                                {` Back `}
                             </Link>
                         </div>
                         <div class="col">
                             <button
                                 type="submit"
                                 role="button"
-                                class="btn btn-sm btn-primary"
+                                class="btn btn-sm btn-primary rounded-4"
                                 aria-label="Save changes"
-                                hidden={!isDirty}>
+                                disabled={!isDirty}
+                            >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="16"
@@ -78,16 +105,17 @@ export function NoteDetail() {
                                 >
                                     <path d="M11 2H9v3h2z" />
                                     <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z" />
-                                </svg> Save changes
+                                </svg>
+                                {` Save changes `}
                             </button>
                         </div>
                         <div class="col">
                             <button
                                 type="button"
-                                class="btn btn-sm btn-outline-danger"
+                                class="btn btn-sm btn-outline-danger rounded-4"
                                 aria-label="Clear"
                                 onClick={onClear}
-                                hidden={!isDirty}
+                                disabled={!isDirty}
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -99,15 +127,43 @@ export function NoteDetail() {
                                 >
                                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
                                     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
-                                </svg> Clear
+                                </svg>
+                                {` Clear `}
                             </button>
+                        </div>
+                        <div class=" col">
+                            {/* TODO: implement in new a feature. Currently we won't allow changing folder from UI.*/}
+                            {/*<FoldersDropDownSelector
+                                folders={folderTree.value}
+                                currentFolder={folderName}
+                            />*/}
+                            <select
+                                name="folder-selector"
+                                aria-label="Folder selector for note"
+                                class="form-select form-select-sm rounded-4"
+                                onChange={(e) =>
+                                    setFolderName(e.currentTarget.value)
+                                }
+                                disabled
+                            >
+                                <option selected value={folderId}>
+                                    {folderName}
+                                </option>
+                                {folderTree.value.map((folder) => (
+                                    <FoldersDropDownSelectorItem
+                                        folder={folder}
+                                        key={folder.id}
+                                    />
+                                ))}
+                            </select>
                         </div>
                         <div class="col">
                             <button
                                 type="button"
-                                class="btn btn-sm btn-danger"
+                                class="btn btn-sm btn-danger rounded-4"
                                 aria-label="Delete"
-                                onClick={onDelete}>
+                                onClick={onDelete}
+                            >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="16"
@@ -118,7 +174,8 @@ export function NoteDetail() {
                                 >
                                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
                                     <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
-                                </svg> Delete
+                                </svg>
+                                {` Delete `}
                             </button>
                         </div>
                     </div>
@@ -128,29 +185,28 @@ export function NoteDetail() {
                         <input
                             value={title}
                             onInput={(e) => setTitle(e.currentTarget.value)}
-                            class="form-control form-control-lg border" />
+                            class="form-control form-control-lg border  rounded-4"
+                        />
                     </div>
                     <div class="card-text">
                         <textarea
                             value={content}
                             onInput={(e) => setContent(e.currentTarget.value)}
-                            class="form-control form-control-lg border"
-                            rows={10}
+                            class="form-control form-control-lg border vh-100 rounded-4"
                         />
                     </div>
                 </div>
-                <div class="card-footer border-0 shadow-sm rounded-3 text-body-secondary fw-light">
+                <div class="card-footer border-0 rounded bg-primary-subtle fw-light  rounded-4">
                     <div class="row row-cols-auto justify-content-between">
                         <small class="col font-monospace">
-                            Last updated: {new Date(note.updatedAt).toLocaleString()}
+                            {`Last updated: ${new Date(note.updatedAt).toLocaleString()}`}
                         </small>
                         <small class="col font-monospace">
-                            Created on: {new Date(note.createdAt).toLocaleString()}
+                            {`Created on: ${new Date(note.createdAt).toLocaleString()}`}
                         </small>
                     </div>
                 </div>
             </form>
         </div>
-    )
-
+    );
 }

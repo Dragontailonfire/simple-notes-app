@@ -7,12 +7,27 @@ vi.mock("wouter", () => ({
 }));
 
 describe("Note list component", () => {
-    const mockNotes = [{
-        id: 1, content: "Test Note", title: "Test Content", userId: "user-1", createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
-    }];
+    const mockNotes = [
+        {
+            id: 1,
+            content: "Test Note",
+            title: "Test Content",
+            userId: "user-1",
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            folderDetails: { id: 1, name: "Test folder" },
+        },
+    ];
+
+    const mockFoldersSelected = [1, 2, 3];
 
     it("renders notes", () => {
-        render(<NoteList notes={mockNotes} />)
+        render(
+            <NoteList
+                notes={mockNotes}
+                selectedFoldersToView={mockFoldersSelected}
+            />,
+        );
         expect(screen.getByText("Test Note")).toBeInTheDocument();
-    })
-})
+    });
+});

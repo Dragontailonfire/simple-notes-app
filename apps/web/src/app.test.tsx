@@ -8,7 +8,6 @@ vi.mock("../lib/supabase");
 globalThis.fetch = vi.fn();
 
 describe("App component", () => {
-
     beforeEach(() => {
         vi.clearAllMocks();
     });
@@ -16,14 +15,18 @@ describe("App component", () => {
     it("should render login page", () => {
         render(<App />);
         expect(screen.getByText("Simple Notes App")).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: /Sign in with GitHub/i })).toBeInTheDocument();
+        expect(
+            screen.getByRole("button", { name: /Sign in with GitHub/i }),
+        ).toBeInTheDocument();
     });
 
     it("should fetch notes when logged in", async () => {
-        vi.mocked(supabase.auth.onAuthStateChange).mockImplementation(((callback: any) => {
+        vi.mocked(supabase.auth.onAuthStateChange).mockImplementation(((
+            callback: any,
+        ) => {
             const session = {
                 access_token: "test-token",
-                user: { id: "test-user-1", email: "test@example.com" }
+                user: { id: "test-user-1", email: "test@example.com" },
             };
 
             callback("SIGNED_IN", session as any);
@@ -33,14 +36,39 @@ describe("App component", () => {
         vi.mocked(fetch).mockResolvedValue({
             ok: true,
             json: async () => [
-                { id: 1, title: "Test Note", content: "Test Note content", userId: "test-user-1", createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
-            ]
+                {
+                    id: 1,
+                    title: "Test Note",
+                    content: "Test Note content",
+                    userId: "test-user-1",
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                    folderDetails: {
+                        folderId: 1,
+                        name: "Test folder",
+                    },
+                },
+            ],
+        } as Response);
+
+        vi.mocked(fetch).mockResolvedValue({
+            ok: true,
+            json: async () => [
+                {
+                    id: 1,
+                    name: "Test Folder",
+                    parentId: null,
+                    userId: "test-user-1",
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                },
+            ],
         } as Response);
 
         render(
-        <Router>
-            <App />
-        </Router>
+            <Router>
+                <App />
+            </Router>,
         );
 
         await waitFor(() => {

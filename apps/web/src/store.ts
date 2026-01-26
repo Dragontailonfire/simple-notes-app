@@ -1,10 +1,13 @@
 import { signal } from "@preact/signals";
-import type { Note } from "@template/shared-types";
+import type { Note, FolderTreeDto, FolderDto } from "@template/shared-types";
 import { supabase } from "../lib/supabase";
 
 export const session = signal<any>(null);
 export const notes = signal<Note[]>([]);
+export const folderTree = signal<FolderTreeDto[]>([]);
 export const sortByDescending = signal<boolean>(true);
+export const allFolders = signal<FolderDto[]>([]);
+export const selectedFoldersToView = signal<number[]>([]);
 
 const raw = import.meta.env.VITE_SERVER_URL ?? "";
 
@@ -39,14 +42,66 @@ export const fetchNotes = async () => {
     }
 };
 
+export const fetchFolders = async () => {
+    try {
+        if (!session.value) return;
+        const res = await fetch(apiUrl("/folders"), {
+            headers: {
+                Authorization: `Bearer ${session.value.access_token}`,
+            },
+        });
+        if (res.ok) {
+            const response = await res.json();
+            folderTree.value = generateTreeStructure(response);
+            allFolders.value = [...response].sort((a, b) => a.id - b.id);
+            selectedFoldersToView.value = allFolders.value.map(
+                (folder) => folder.id,
+            );
+        } else {
+            console.error("Failed to fetch folders:", res.statusText);
+        }
+    } catch (error) {
+        console.error("Error fetching folders:", error);
+    }
+};
+
+const generateTreeStructure = (folders: FolderDto[]): FolderTreeDto[] => {
+    const foldersMap = new Map<number, FolderTreeDto>();
+    for (const folder of folders) {
+        foldersMap.set(folder.id, { ...folder, children: [] });
+    }
+    const treeStructure: FolderTreeDto[] = [];
+    for (const folder of folders) {
+        const treeFolder = foldersMap.get(folder.id);
+        if (!treeFolder) continue;
+        if (folder.parentId === null) {
+            treeStructure.push(treeFolder);
+        } else {
+            const parentFolder = foldersMap.get(folder.parentId);
+            if (parentFolder) {
+                parentFolder.children.push(treeFolder);
+            }
+        }
+    }
+    return treeStructure;
+};
+
 export const sortNotesInAscending = () => {
     notes.value = [...notes.value].sort((a, b) => a.id - b.id);
     sortByDescending.value = false;
-}
+};
 export const sortNotesInDescending = () => {
     notes.value = [...notes.value].sort((a, b) => b.id - a.id);
     sortByDescending.value = true;
-}
+};
+
+export const setFolderToView = (folderId: number) => {
+    selectedFoldersToView.value = [folderId];
+};
+
+export const setAllFoldersToView = () => {
+    selectedFoldersToView.value = allFolders.value.map((folder) => folder.id);
+};
 
 export const addNote = async (content: string): Promise<boolean> => {
     if (!session.value) return false;
@@ -57,7 +112,11 @@ export const addNote = async (content: string): Promise<boolean> => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${session.value.access_token}`,
         },
-        body: JSON.stringify({ content: content, title: content }),
+        body: JSON.stringify({
+            content: content,
+            title: content,
+            folderId: selectedFoldersToView.value[0],
+        }),
     });
 
     if (res.ok) {
@@ -72,7 +131,7 @@ export const addNote = async (content: string): Promise<boolean> => {
 export const deleteNote = async (id: number): Promise<boolean> => {
     if (!session.value) return false;
     const proceed = window.confirm(
-        "Are you sure you want to delete this note?"
+        "Are you sure you want to delete this note?",
     );
     if (!proceed) return false;
 
@@ -97,7 +156,12 @@ export const deleteNote = async (id: number): Promise<boolean> => {
     }
 };
 
-export const updateNote = async (id: number, newContent: string, newTitle: string): Promise<boolean> => {
+export const updateNote = async (
+    id: number,
+    newContent: string,
+    newTitle: string,
+    newFolderId: number | null,
+): Promise<boolean> => {
     if (!session.value || !id) return false;
 
     try {
@@ -107,7 +171,11 @@ export const updateNote = async (id: number, newContent: string, newTitle: strin
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${session.value.access_token}`,
             },
-            body: JSON.stringify({ content: newContent, title: newTitle }),
+            body: JSON.stringify({
+                content: newContent,
+                title: newTitle,
+                folderId: newFolderId,
+            }),
         });
 
         if (res.ok) {

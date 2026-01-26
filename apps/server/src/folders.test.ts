@@ -18,24 +18,17 @@ vi.mock("./db/connect", () => ({
         select: () => ({
             from: () => ({
                 where: () => ({
-                    orderBy: () => ({
-                        innerJoin: () =>
-                            Promise.resolve([
-                                {
-                                    id: 1,
-                                    title: "Test note 1",
-                                    content: "Save this note",
-                                    createdAt: new Date().toISOString(),
-                                    updatedAt: new Date().toISOString(),
-                                    userId: "test-user",
-                                    folderId: 1,
-                                    folderDetails: {
-                                        folderId: 1,
-                                        name: "Test folder",
-                                    },
-                                },
-                            ]),
-                    }),
+                    orderBy: () =>
+                        Promise.resolve([
+                            {
+                                id: 1,
+                                name: "Root folder 1",
+                                parentId: null,
+                                createdAt: new Date().toISOString(),
+                                updatedAt: new Date().toISOString(),
+                                userId: "test-user",
+                            },
+                        ]),
                 }),
             }),
         }),
@@ -45,12 +38,11 @@ vi.mock("./db/connect", () => ({
                     Promise.resolve([
                         {
                             id: 2,
-                            title: payload.title,
-                            content: payload.content,
+                            name: payload.name,
+                            parentId: payload.parentId,
                             createdAt: new Date().toISOString(),
                             updatedAt: new Date().toISOString(),
                             userId: "test-user",
-                            folderId: 1,
                         },
                     ]),
             }),
@@ -62,12 +54,11 @@ vi.mock("./db/connect", () => ({
                         Promise.resolve([
                             {
                                 id: 1,
-                                title: payload.title,
-                                content: payload.content,
+                                name: payload.name,
+                                parentId: payload.parentId,
                                 createdAt: new Date().toISOString(),
                                 updatedAt: new Date().toISOString(),
                                 userId: "test-user",
-                                folderId: 1,
                             },
                         ]),
                 }),
@@ -79,12 +70,11 @@ vi.mock("./db/connect", () => ({
                     Promise.resolve([
                         {
                             id: 1,
-                            title: "Test note 1",
-                            content: "Save this note",
+                            name: "Root folder 1",
+                            parentId: null,
                             createdAt: new Date().toISOString(),
                             updatedAt: new Date().toISOString(),
                             userId: "test-user",
-                            folderId: 1,
                         },
                     ]),
             }),
@@ -93,21 +83,17 @@ vi.mock("./db/connect", () => ({
 }));
 
 describe("Server API", () => {
-    it("GET /api/notes returns list of notes", async () => {
-        const res = await app.request("/api/notes");
+    it("GET /api/folders returns list of folders", async () => {
+        const res = await app.request("/api/folders");
         expect(res.status).toBe(200);
         const data = await res.json();
-        expect(data[0].content).toBe("Save this note");
-        expect(data[0].title).toBe("Test note 1");
+        expect(data[0].parentId).toBe(null);
+        expect(data[0].name).toBe("Root folder 1");
     });
 
-    it("POST /api/notes saves a note", async () => {
-        const payload = {
-            content: "Save this note",
-            title: "Test Note 1",
-            folderId: 1,
-        };
-        const req = new Request("http://localhost/api/notes", {
+    it("POST /api/folders saves a folder", async () => {
+        const payload = { parentId: 1, name: "Child folder 1" };
+        const req = new Request("http://localhost/api/folders", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -118,7 +104,7 @@ describe("Server API", () => {
         const res = await app.request(req);
         expect(res.status).toBe(200);
         const data = await res.json();
-        expect(data[0].content).toBe("Save this note");
-        expect(data[0].title).toBe("Test Note 1");
+        expect(data[0].parentId).toBe(1);
+        expect(data[0].name).toBe("Child folder 1");
     });
 });

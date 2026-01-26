@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/preact";
 import { describe, expect, it } from "vitest";
 import { HomePageToolBar } from "./HomePageToolBar";
 
-describe("Login component", () => {
+describe("Home page tool bar component", () => {
     it("renders Home page tool bar", () => {
         render(<HomePageToolBar />);
         expect(screen.getByRole("group", { name: /Sorting button group/i })).toBeInTheDocument();
