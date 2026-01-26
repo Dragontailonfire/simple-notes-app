@@ -1,5 +1,17 @@
 # @template/web
 
+## 1.2.0
+
+### Minor Changes
+
+- 181b15e: Introducing folders to organize notes.
+
+### Patch Changes
+
+- Fix issue in test where folder details property was missing
+- Updated dependencies [181b15e]
+  - @template/shared-types@1.1.0
+
 ## 1.1.3
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # server
 
+## 2.1.0
+
+### Minor Changes
+
+- 181b15e: Introducing folders to organize notes.
+
+### Patch Changes
+
+- Updated dependencies [181b15e]
+  - @template/shared-types@1.1.0
+
 ## 2.0.0
 
 ### Major Changes

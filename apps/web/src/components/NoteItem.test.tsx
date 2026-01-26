@@ -8,11 +8,17 @@ vi.mock("wouter", () => ({
 
 describe("Note item component", () => {
     const mockNote = {
-        id: 1, content: "Test Note", title: "Note Content", userId: "user-1", createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
+        id: 1,
+        content: "Test Note",
+        title: "Note Content",
+        userId: "user-1",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        folderDetails: { id: 1, name: "Test folder" },
     };
 
     it("renders note", () => {
-        render(<NoteItem note={mockNote} />)
+        render(<NoteItem note={mockNote} />);
         expect(screen.getByText("Test Note")).toBeInTheDocument();
-    })
-})
+    });
+});
