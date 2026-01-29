@@ -28,13 +28,13 @@ export const AddNote: FunctionalComponent<AddNoteProps> = ({ onAddNote }) => {
                         value={content.value}
                         onInput={(e) => (content.value = e.currentTarget.value)}
                         placeholder="Add a quick note..."
-                        class="form-control form-control-sm roudnded-start-4 w-50"
+                        class="form-control form-control-sm rounded-0 w-50"
                         type="text"
                         aria-label="Add new note"
                     />
                     <button
                         type="submit"
-                        class="btn btn-sm btn-primary rounded-end-4"
+                        class="btn btn-sm btn-primary rounded-0"
                         aria-label="Add note"
                         disabled={content.value === ""}
                         aria-disabled={content.value === "" ? "true" : "false"}

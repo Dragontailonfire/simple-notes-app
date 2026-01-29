@@ -10,7 +10,7 @@ export function FoldersTreeItem({ folder }: FoldersTreeItemProps) {
         <>
             <button
                 type="button"
-                class="list-group-item list-group-item-action mb-1 rounded-4"
+                class="list-group-item list-group-item-action rounded-0"
                 onClick={() => setFolderToView(folder.id)}
             >
                 {folder.name}

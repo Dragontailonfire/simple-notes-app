@@ -11,7 +11,7 @@ export function HomePageToolBar() {
         <div class="container d-inline-flex justify-content-center mb-2">
             <div
                 role="toolbar"
-                class="btn-toolbar row p-2 gx-2 row-cols-auto justify-content-evenly border-0 align-items-center bg-primary-subtle rounded-4 shadow"
+                class="btn-toolbar row p-1 gx-2 row-cols-auto justify-content-evenly border align-items-center bg-body-tertiary rounded-0 shadow-sm"
             >
                 <div class="col">
                     <button
@@ -20,7 +20,7 @@ export function HomePageToolBar() {
                         data-bs-target="#folderTree"
                         aria-expanded="true"
                         aria-controls="#folderTree"
-                        class="btn btn-outline-secondary border-0 w-100 rounded-4 col-md-4 d-md-none"
+                        class="btn btn-outline-secondary border-0 w-100 rounded-0 col-md-4 d-md-none"
                         name="expand-all"
                         id="expand-all"
                     >
@@ -29,7 +29,7 @@ export function HomePageToolBar() {
                 </div>
                 <div class="col">
                     <div
-                        class="btn-group btn-group-sm"
+                        class="btn-group btn-group-sm rounded-0"
                         role="group"
                         aria-label="Sorting button group"
                     >

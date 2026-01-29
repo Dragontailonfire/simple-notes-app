@@ -46,10 +46,11 @@ export function App() {
     return (
         <>
             <header class="container-fluid">
-                <div class="row row-cols-auto justify-content-between align-items-center bg-primary-subtle p-2 shadow-sm">
+                <nav></nav>
+                <div class="row row-cols-auto justify-content-between align-items-center pt-1">
                     <div class="col">
                         <Link
-                            class="align-items-center link-body-emphasis text-decoration-none fw-semibold text-primary-emphasis"
+                            class="align-items-center link-body-emphasis text-decoration-none fw-light"
                             href="/"
                         >
                             <svg
@@ -69,7 +70,7 @@ export function App() {
                     <div class="col">
                         <button
                             onClick={logout}
-                            class="btn btn-danger btn-sm"
+                            class="btn btn-danger btn-sm rounded-0"
                             aria-label="Logout"
                             type="button"
                         >
@@ -88,14 +89,14 @@ export function App() {
                     </div>
                 </div>
             </header>
-            <main class="container-fluid my-3">
+            <main class="container-fluid my-2">
                 <Switch>
                     <Route path="/" component={Home} />
                     <Route path="/note/:id" component={NoteDetail} />
                     <Route component={Common} />
                 </Switch>
             </main>
-            <footer class="bg-body-tertiary p-5 mt-5">
+            <footer class="bg-body-tertiary p-3 mt-5">
                 <span class="text-body-secondary p-1">
                     © 2026 Dragontailonfire
                 </span>

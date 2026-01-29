@@ -20,11 +20,11 @@ export function Login() {
                     Simple Notes App
                 </h1>
                 <p class="lead mb-4">
-                    Please login using your GitHub account to manage your
-                    important notes easily.
+                    Login using your GitHub account to manage your important
+                    notes easily.
                 </p>
                 <button
-                    class="btn btn-dark border px-5 mb-5"
+                    class="btn btn-dark border mb-5 rounded-0"
                     onClick={loginWithGitHub}
                     type="button"
                 >

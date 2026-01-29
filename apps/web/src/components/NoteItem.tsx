@@ -11,24 +11,20 @@ export function NoteItem({ note }: NoteItemProps) {
             class="text-decoration-none text-reset stretched-link position-relative"
             href={`/note/${note.id}`}
         >
-            <div class="rounded-4 bg-primary-subtle border-0 p-2 shadow">
-                <div
-                    class="card text-start h-100 border-0 rounded-4"
-                    style="max-width: 18rem;"
-                >
-                    <div class="card-header border-0 shdadow-sm bg-primary-subtle">
-                        <div class="card-title fw-medium">{note.title}</div>
-                    </div>
-                    <div class="card-body border-0 shadow-sm">
-                        <p class="card-text fw-light text-break text-truncate">
-                            {note.content}
-                        </p>
-                    </div>
-                    <div class="card-footer border-0 bg-transparent">
-                        <small class="fw-lighter text-body-secondary">
-                            {`Last updated: ${new Date(note.updatedAt).toLocaleString()}`}
-                        </small>
-                    </div>
+            <div
+                class="card text-start h-100 rounded-0"
+                style="max-width: 18rem;"
+            >
+                <div class="card-header border-0">
+                    <div class="card-title">{note.title}</div>
+                </div>
+                <div class="card-body">
+                    <p class="card-text fw-light text-break">{note.content}</p>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <small class="fw-lighter text-body-secondary">
+                        {`Last updated: ${new Date(note.updatedAt).toLocaleString()}`}
+                    </small>
                 </div>
             </div>
         </Link>

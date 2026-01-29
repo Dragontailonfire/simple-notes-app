@@ -1,5 +1,11 @@
 # @template/web
 
+## 1.3.0
+
+### Minor Changes
+
+- Change app theme to dark with sharp borders
+
 ## 1.2.0
 
 ### Minor Changes
