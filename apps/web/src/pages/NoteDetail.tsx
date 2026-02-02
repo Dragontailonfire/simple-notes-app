@@ -12,7 +12,7 @@ export function NoteDetail() {
 
     if (!note || !match) {
         return (
-            <div class="p-5 text-center rounded-0 bg-warning-subtle">
+            <div class="p-5 text-center rounded bg-warning-subtle">
                 <h1 class="text-body-emphasis fw-bolder p-5">
                     Note not found!{" "}
                 </h1>
@@ -59,9 +59,9 @@ export function NoteDetail() {
     };
 
     return (
-        <div key={note.id} class=" card border-0 h-100 shadow-none rounded-0">
+        <div key={note.id} class="card border-0 h-100 shadow-none">
             <form onSubmit={onSave}>
-                <div class="card-header border-0 rounded bg-body-tertiary rounded-0">
+                <div class="card-header border bg-body rounded shadow-sm">
                     <div
                         role="toolbar"
                         class="btn-toolbar row row-cols-auto justify-content-between g-3"
@@ -69,7 +69,7 @@ export function NoteDetail() {
                         <div class="col">
                             <Link
                                 href="/"
-                                class="btn btn-sm btn-outline-secondary rounded-0"
+                                class="btn btn-sm btn-outline-secondary"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -91,7 +91,7 @@ export function NoteDetail() {
                             <button
                                 type="submit"
                                 role="button"
-                                class="btn btn-sm btn-primary rounded-0"
+                                class="btn btn-sm btn-primary"
                                 aria-label="Save changes"
                                 disabled={!isDirty}
                             >
@@ -112,7 +112,7 @@ export function NoteDetail() {
                         <div class="col">
                             <button
                                 type="button"
-                                class="btn btn-sm btn-outline-danger rounded-0"
+                                class="btn btn-sm btn-outline-danger"
                                 aria-label="Clear"
                                 onClick={onClear}
                                 disabled={!isDirty}
@@ -140,7 +140,7 @@ export function NoteDetail() {
                             <select
                                 name="folder-selector"
                                 aria-label="Folder selector for note"
-                                class="form-select form-select-sm rounded-0"
+                                class="form-select form-select-sm"
                                 onChange={(e) =>
                                     setFolderName(e.currentTarget.value)
                                 }
@@ -160,7 +160,7 @@ export function NoteDetail() {
                         <div class="col">
                             <button
                                 type="button"
-                                class="btn btn-sm btn-danger rounded-0"
+                                class="btn btn-sm btn-danger"
                                 aria-label="Delete"
                                 onClick={onDelete}
                             >
@@ -185,18 +185,18 @@ export function NoteDetail() {
                         <input
                             value={title}
                             onInput={(e) => setTitle(e.currentTarget.value)}
-                            class="form-control form-control-lg border  rounded-0"
+                            class="form-control form-control-lg"
                         />
                     </div>
                     <div class="card-text">
                         <textarea
                             value={content}
                             onInput={(e) => setContent(e.currentTarget.value)}
-                            class="form-control form-control-lg border vh-100 rounded-0"
+                            class="form-control form-control-lg vh-100"
                         />
                     </div>
                 </div>
-                <div class="card-footer border-0 bg-body-tertiary fw-light  rounded-0">
+                <div class="card-footer fw-light border bg-body rounded shadow-sm">
                     <div class="row row-cols-auto justify-content-between">
                         <small class="col font-monospace">
                             {`Last updated: ${new Date(note.updatedAt).toLocaleString()}`}

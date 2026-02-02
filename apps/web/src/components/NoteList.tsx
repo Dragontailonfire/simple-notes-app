@@ -13,7 +13,7 @@ export function NoteList({ notes, selectedFoldersToView }: NoteListProps) {
 
     if (notesInFilter.length === 0) {
         return (
-            <div class="p-5 text-center rounded-0 bg-warning-subtle">
+            <div class="p-5 text-center rounded bg-warning-subtle">
                 <h1 class="text-body-emphasis fw-bolder p-5">
                     No notes added!
                 </h1>

@@ -12,7 +12,7 @@ export function NoteItem({ note }: NoteItemProps) {
             href={`/note/${note.id}`}
         >
             <div
-                class="card text-start h-100 rounded-0"
+                class="card text-start h-100 shadow-sm border"
                 style="max-width: 18rem;"
             >
                 <div class="card-header border-0">

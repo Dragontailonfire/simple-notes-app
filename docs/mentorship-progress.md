@@ -71,3 +71,30 @@
 | **7.2** | **Ownership Logic** | ✅ Done | Implemented `and(eq(id), eq(userId))` for security. |
 | **7.3** | **Global Sync** | ✅ Done | Refactored shared types to camelCase. |
 | **7.4** | **Summary** | ✅ Done | Documented in [day-7-drizzle.md](file:///Users/narayanan/root/github/simple-notes-app/docs/server/db/day-7-drizzle.md). |
+
+## Module 8: Architectural Review & Code Quality
+**Status**: 🟡 In Progress
+
+### High Priority
+| Lesson | Topic | Status | Notes |
+| :--- | :--- | :--- | :--- |
+| **8.1** | **Type Safety** | 📅 Pending | Remove `any` types: `store.ts:5`, `auth.ts:18`, `supabase.ts:4-5` |
+| **8.2** | **User-Facing Errors** | 📅 Pending | `store.ts` logs errors to console but never shows to users |
+| **8.3** | **API Status Codes** | 📅 Pending | DELETE returns `[]` with 200 instead of 404 for missing resources |
+| **8.4** | **Authorization Validation** | 📅 Pending | No validation that `folderId` belongs to the user |
+
+### Medium Priority
+| Lesson | Topic | Status | Notes |
+| :--- | :--- | :--- | :--- |
+| **8.5** | **State Management** | 📅 Pending | Mixed concerns in `store.ts`, inconsistent update patterns |
+| **8.6** | **Code Duplication** | 📅 Pending | ID validation repeated in `notes.ts:58-62` and `folders.ts:44-48` |
+| **8.7** | **Database Indexes** | 📅 Pending | Missing indexes on `userId`, `folderId`, `parentId` columns |
+| **8.8** | **Dead Code Cleanup** | 📅 Pending | Commented/disabled code in NoteDetail, AddNote, HomePageToolBar |
+| **8.9** | **E2E Tests** | 📅 Pending | `auth.setup.ts` has tests marked as `skip()` |
+
+### Low Priority
+| Lesson | Topic | Status | Notes |
+| :--- | :--- | :--- | :--- |
+| **8.10** | **API Response Format** | 📅 Pending | Inconsistent formats; error handler returns plaintext not JSON |
+| **8.11** | **Environment Template** | 📅 Pending | Missing `.env.example` file |
+| **8.12** | **Observability** | 📅 Pending | Logger middleware added but not utilized |

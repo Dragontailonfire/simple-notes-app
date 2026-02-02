@@ -11,12 +11,12 @@ export function FoldersTree({ folders }: FoldersTreeProps) {
         <>
             <div
                 id="folderTree"
-                class="collapse show overflow-scroll bg-body-tertiary shadow-sm"
+                class="collapse show overflow-scroll shadow-sm mt-2"
             >
                 <div class="list-group">
                     <button
                         type="button"
-                        class="list-group-item list-group-item-action rounded-0"
+                        class="list-group-item list-group-item-action shadow-sm"
                         onClick={setAllFoldersToView}
                     >
                         All notes

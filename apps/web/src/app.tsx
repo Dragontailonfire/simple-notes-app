@@ -47,7 +47,7 @@ export function App() {
         <>
             <header class="container-fluid">
                 <nav></nav>
-                <div class="row row-cols-auto justify-content-between align-items-center pt-1">
+                <div class="row row-cols-auto justify-content-between bg-body align-items-center pt-2">
                     <div class="col">
                         <Link
                             class="align-items-center link-body-emphasis text-decoration-none fw-light"
@@ -55,8 +55,8 @@ export function App() {
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
+                                width="18"
+                                height="18"
                                 fill="currentColor"
                                 class="bi bi-file-post"
                                 viewBox="0 0 16 16"
@@ -64,13 +64,13 @@ export function App() {
                                 <path d="M4 3.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5z"></path>
                                 <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1"></path>
                             </svg>
-                            {` ${getDisplayName()}'s Notes `}
+                            {` ${getDisplayName()}'s notes `}
                         </Link>
                     </div>
                     <div class="col">
                         <button
                             onClick={logout}
-                            class="btn btn-danger btn-sm rounded-0"
+                            class="btn btn-danger btn-sm"
                             aria-label="Logout"
                             type="button"
                         >
@@ -89,14 +89,14 @@ export function App() {
                     </div>
                 </div>
             </header>
-            <main class="container-fluid my-2">
+            <main class="container-fluid py-3">
                 <Switch>
                     <Route path="/" component={Home} />
                     <Route path="/note/:id" component={NoteDetail} />
                     <Route component={Common} />
                 </Switch>
             </main>
-            <footer class="bg-body-tertiary p-3 mt-5">
+            <footer class="bg-body-tertiary p-3 shadow">
                 <span class="text-body-secondary p-1">
                     © 2026 Dragontailonfire
                 </span>

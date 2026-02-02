@@ -8,28 +8,14 @@ import { AddNote } from "./AddNote";
 
 export function HomePageToolBar() {
     return (
-        <div class="container d-inline-flex justify-content-center mb-2">
+        <div class="container d-inline-flex justify-content-center my-2">
             <div
                 role="toolbar"
-                class="btn-toolbar row p-1 gx-2 row-cols-auto justify-content-evenly border align-items-center bg-body-tertiary rounded-0 shadow-sm"
+                class="btn-toolbar row gy-2 row-cols-auto justify-content-evenly border align-items-center rounded shadow-sm"
             >
                 <div class="col">
-                    <button
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#folderTree"
-                        aria-expanded="true"
-                        aria-controls="#folderTree"
-                        class="btn btn-outline-secondary border-0 w-100 rounded-0 col-md-4 d-md-none"
-                        name="expand-all"
-                        id="expand-all"
-                    >
-                        View/Hide folders
-                    </button>
-                </div>
-                <div class="col">
                     <div
-                        class="btn-group btn-group-sm rounded-0"
+                        class="btn-group btn-group"
                         role="group"
                         aria-label="Sorting button group"
                     >
@@ -100,6 +86,20 @@ export function HomePageToolBar() {
                 </div>
                 <div class="col">
                     <AddNote onAddNote={addNote} />
+                </div>
+                <div class="col">
+                    <button
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#folderTree"
+                        aria-expanded="true"
+                        aria-controls="#folderTree"
+                        class="btn btn-outline-secondary border-0 w-100 col-md-4 d-md-none"
+                        name="expand-all"
+                        id="expand-all"
+                    >
+                        View/Hide folders
+                    </button>
                 </div>
                 {/* <div class="col">
                     <div class="btn-group btn-group-sm" role="group" aria-label="Layout button group">

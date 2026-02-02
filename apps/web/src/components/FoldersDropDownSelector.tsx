@@ -17,7 +17,7 @@ export function FoldersDropDownSelector({
             <select
                 name="folder-selector"
                 aria-label="Folder selector for note"
-                class="form-select form-select-sm rounded-0"
+                class="form-select form-select-sm"
             >
                 <option selected value={folderName}>
                     {folderName}

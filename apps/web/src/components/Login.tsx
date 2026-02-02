@@ -24,7 +24,7 @@ export function Login() {
                     notes easily.
                 </p>
                 <button
-                    class="btn btn-dark border mb-5 rounded-0"
+                    class="btn btn-dark border mb-5"
                     onClick={loginWithGitHub}
                     type="button"
                 >

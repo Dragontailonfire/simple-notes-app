@@ -7,12 +7,10 @@ export function Home() {
     return (
         <>
             <div class="row">
-                <div class="sticky-top vstack gap-2 col-md-5 mx-auto mb-2">
-                    <HomePageToolBar />
-                </div>
                 <div class="row">
-                    <div class="col-md-4 col-lg-3 mb-3">
-                        <div class="sticky-top">
+                    <div class="col-md-4 col-lg-3">
+                        <div class="sticky-top pt-2">
+                            <HomePageToolBar />
                             <FoldersTree folders={folderTree.value} />
                         </div>
                     </div>
